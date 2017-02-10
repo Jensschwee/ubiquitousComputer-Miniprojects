@@ -78,18 +78,45 @@ public class MainActivity extends AppCompatActivity {
         wifiScanHandler.post(wifiScanRunnable);
     }
 
+    final Handler handler = new Handler();
+
     protected void btnScan_Clicked(View view)
     {
-        scanWiFi(txtLocation.getText().toString());
+        running = true;
+
+        final Handler wifiScanHandler = new Handler();
+        Runnable wifiScanRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                if (!running) {
+                    return;
+                }
+
+                if (!wifiManager.startScan()){
+                    Log.w(TAG, "Couldn't start Wi-fi scan!");
+                }
+
+                wifiScanHandler.postDelayed(this, WIFI_SCAN_DELAY_MILLIS);
+            }
+        };
+        wifiScanHandler.post(wifiScanRunnable);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                running = false;
+            }
+        }, 20000);
     }
 
-    private void scanWiFi(String lokation)
+    private void scanWiFi(String location, List<ScanResult> scanResults)
     {
         String localMac = wifiManager.getConnectionInfo().getMacAddress();
-        for (ScanResult scan : wifiManager.getScanResults()) {
+        for (ScanResult scan : scanResults) {
             int ss = scan.level;
             String apMac = scan.BSSID;
             Date timestamp = new Date(scan.timestamp);
+            appendToCsv(location, timestamp.toString(), apMac, localMac, getString(ss));
         }
     }
 
@@ -112,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<ScanResult> scanResults = wifiManager.getScanResults();
 
-            // Do something with your scanResults
+            scanWiFi(txtLocation.getText().toString(), scanResults);
         }
 
     }
@@ -124,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         for(String field : fields) {
             csvString += field + ",";
         }
-
         String baseFolder = this.getFilesDir().getAbsolutePath();
         File file = new File(baseFolder + "wifimeasurements.csv");
 

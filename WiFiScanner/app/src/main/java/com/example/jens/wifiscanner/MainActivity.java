@@ -1,18 +1,23 @@
 package com.example.jens.wifiscanner;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.IOException;
 import java.util.Date;
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,7 +86,7 @@ public class MainActivity extends Activity {
 
     final Handler handler = new Handler();
 
-    protected void btnScan_Clicked(View view)
+    public void btnScan_Clicked(View view)
     {
         running = true;
 
@@ -101,7 +106,6 @@ public class MainActivity extends Activity {
                 {
                     Log.w(TAG, "Stated Wi-fi scan!");
                 }
-
                 wifiScanHandler.postDelayed(this, WIFI_SCAN_DELAY_MILLIS);
             }
         };
@@ -121,10 +125,10 @@ public class MainActivity extends Activity {
             int ss = scan.level;
             String apMac = scan.BSSID;
             Date timestamp = new Date(scan.timestamp);
-            appendToCsv(location, timestamp.toString(), apMac, localMac, getString(ss));
-            System.out.print("location");
-            Log.w("sdgsdg", location);
+            Log.w(TAG, location);
+            appendToCsv(location, timestamp.toString(), apMac, localMac, ss+"");
         }
+        Log.d("dg", scanResults.size() + "");
     }
 
     @Override
@@ -145,11 +149,33 @@ public class MainActivity extends Activity {
                 return;
             }
 
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
+                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+
+            }else{
+                List<ScanResult> scanResults = wifiManager.getScanResults();
+
+                scanWiFi(txtLocation.getText().toString(), scanResults);
+                //do something, permission was previously granted; or legacy device
+            }
+
+        }
+    }
+
+    private static final int PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION = 1001;
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Do something with granted permission
             List<ScanResult> scanResults = wifiManager.getScanResults();
 
-            scanWiFi(txtLocation.getText().toString(), scanResults);
-        }
-
+            scanWiFi(txtLocation.getText().toString(), scanResults);        }
     }
 
 
@@ -159,8 +185,17 @@ public class MainActivity extends Activity {
         for(String field : fields) {
             csvString += field + ",";
         }
-        String baseFolder = this.getExternalFilesDir("csv").getAbsolutePath();
-        File file = new File(baseFolder + "wifimeasurements.csv");
+
+        String baseFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+
+
+        File file = new File(baseFolder + "/wifimeasurements.csv");
+        if(!file.exists())
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         FileOutputStream fos = null;
         try {

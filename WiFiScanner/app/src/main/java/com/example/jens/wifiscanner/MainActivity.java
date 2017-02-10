@@ -148,8 +148,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void appendToCsv(String... fields) {
         String csvString = "";
+        csvString += fields[0];
+
+        int count = 0;
         for(String field : fields) {
-            csvString += field + ",";
+            if(count != 0) {
+                csvString += "," + field;
+            }
+            count++;
         }
         String baseFolder = this.getExternalFilesDir("csv").getAbsolutePath();
         File file = new File(baseFolder + "wifimeasurements.csv");

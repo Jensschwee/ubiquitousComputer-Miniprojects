@@ -14,6 +14,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.util.Date;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private WifiScanBroadcastReceiver wifiScanBroadcastReceiver = new WifiScanBroadcastReceiver();
     private WifiManager.WifiLock wifiLock;
+
 
     private volatile boolean running;
 
@@ -108,5 +115,27 @@ public class MainActivity extends AppCompatActivity {
             // Do something with your scanResults
         }
 
+    }
+
+
+
+    private void appendToCsv(String... fields) {
+        String csvString = "";
+        for(String field : fields) {
+            csvString += field + ",";
+        }
+
+        String baseFolder = this.getFilesDir().getAbsolutePath();
+        File file = new File(baseFolder + "wifimeasurements.csv");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(csvString.getBytes());
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

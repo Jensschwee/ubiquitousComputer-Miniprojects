@@ -1,5 +1,6 @@
 package com.example.jens.wifiscanner;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         running = true;
 
         wifiLock.acquire();
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 if (!wifiManager.startScan()){
                     Log.w(TAG, "Couldn't start Wi-fi scan!");
                 }
+                else
+                {
+                    Log.w(TAG, "Stated Wi-fi scan!");
+                }
 
                 wifiScanHandler.postDelayed(this, WIFI_SCAN_DELAY_MILLIS);
             }
@@ -117,11 +122,14 @@ public class MainActivity extends AppCompatActivity {
             String apMac = scan.BSSID;
             Date timestamp = new Date(scan.timestamp);
             appendToCsv(location, timestamp.toString(), apMac, localMac, getString(ss));
+            System.out.print("location");
+            Log.w("sdgsdg", location);
         }
     }
 
     @Override
     protected void onPause() {
+        super.onPause();
         running = false;
 
         unregisterReceiver(wifiScanBroadcastReceiver);

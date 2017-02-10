@@ -182,8 +182,14 @@ public class MainActivity extends Activity {
 
     private void appendToCsv(String... fields) {
         String csvString = "";
+        csvString += fields[0];
+
+        int count = 0;
         for(String field : fields) {
-            csvString += field + ",";
+            if(count != 0) {
+                csvString += "," + field;
+            }
+            count++;
         }
 
         String baseFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();

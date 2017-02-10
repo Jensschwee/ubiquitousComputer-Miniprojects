@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         for(String field : fields) {
             csvString += field + ",";
         }
-        String baseFolder = this.getFilesDir().getAbsolutePath();
+        String baseFolder = this.getExternalFilesDir("csv").getAbsolutePath();
         File file = new File(baseFolder + "wifimeasurements.csv");
 
         FileOutputStream fos = null;

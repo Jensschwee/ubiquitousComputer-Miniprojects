@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
 
     private EditText txtLocation;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,11 @@ public class MainActivity extends Activity {
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY, MainActivity.class.getName());
         txtLocation = (EditText) findViewById(R.id.txtLocation);
-    }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+        }
+        }
 
     @Override
     protected void onResume() {
@@ -124,11 +130,9 @@ public class MainActivity extends Activity {
         for (ScanResult scan : scanResults) {
             int ss = scan.level;
             String apMac = scan.BSSID;
-            Date timestamp = new Date(scan.timestamp);
-            Log.w(TAG, location);
-            appendToCsv(location, timestamp.toString(), apMac, localMac, ss+"");
+            long timestamp = scan.timestamp;
+            appendToCsv(location, timestamp+"", apMac, localMac, ss+"");
         }
-        Log.d("dg", scanResults.size() + "");
     }
 
     @Override
@@ -150,8 +154,7 @@ public class MainActivity extends Activity {
             }
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_CODE_ACCESS_COARSE_LOCATION);
                 //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
 
             }else{
@@ -194,7 +197,6 @@ public class MainActivity extends Activity {
 
         String baseFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
-
         File file = new File(baseFolder + "/wifimeasurements.csv");
         if(!file.exists())
             try {
@@ -205,7 +207,7 @@ public class MainActivity extends Activity {
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file,true);
             fos.write(csvString.getBytes());
             fos.flush();
             fos.close();

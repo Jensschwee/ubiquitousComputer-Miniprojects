@@ -10,8 +10,12 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private volatile boolean running;
 
+    private EditText txtLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY, MainActivity.class.getName());
+        txtLocation = (EditText) findViewById(R.id.txtLocation);
     }
 
     @Override
@@ -62,6 +69,21 @@ public class MainActivity extends AppCompatActivity {
 
         };
         wifiScanHandler.post(wifiScanRunnable);
+    }
+
+    protected void btnScan_Clicked(View view)
+    {
+        scanWiFi(txtLocation.getText().toString());
+    }
+
+    private void scanWiFi(String lokation)
+    {
+        String localMac = wifiManager.getConnectionInfo().getMacAddress();
+        for (ScanResult scan : wifiManager.getScanResults()) {
+            int ss = scan.level;
+            String apMac = scan.BSSID;
+            Date timestamp = new Date(scan.timestamp);
+        }
     }
 
     @Override

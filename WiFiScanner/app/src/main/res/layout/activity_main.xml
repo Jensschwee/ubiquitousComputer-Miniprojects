@@ -9,8 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.jens.wifiscanner.MainActivity">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Type your location"
+        android:id="@+id/txtLocation"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="scan"
+        android:layout_below="@+id/txtLocation"
+        android:id="@+id/btnScan"
+        android:onClick="btnScan_Clicked"/>
 </RelativeLayout>

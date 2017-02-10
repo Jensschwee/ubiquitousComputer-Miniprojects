@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.Date;
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
     private volatile boolean running;
 
     private EditText txtLocation;
+    private Button btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,13 @@ public class MainActivity extends Activity {
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY, MainActivity.class.getName());
         txtLocation = (EditText) findViewById(R.id.txtLocation);
+        btn = (Button) findViewById(R.id.btnScan);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnScan_Clicked(view);
+            }
+        });
     }
 
     @Override
@@ -165,12 +174,14 @@ public class MainActivity extends Activity {
             }
             count++;
         }
+        csvString += ";\n";
+
         String baseFolder = this.getExternalFilesDir("csv").getAbsolutePath();
         File file = new File(baseFolder + "wifimeasurements.csv");
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file, true);
             fos.write(csvString.getBytes());
             fos.flush();
             fos.close();

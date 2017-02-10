@@ -19,6 +19,5 @@
         android:layout_height="wrap_content"
         android:text="scan"
         android:layout_below="@+id/txtLocation"
-        android:id="@+id/btnScan"
-        android:onClick="btnScan_Clicked"/>
+        android:id="@+id/btnScan"/>
 </RelativeLayout>

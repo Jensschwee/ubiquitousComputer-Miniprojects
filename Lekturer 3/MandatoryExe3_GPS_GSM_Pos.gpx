@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?><gpx version="1.0" creator="GPSLogger 86 - http://gpslogger.mendhak.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/0" xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd"><time>2017-03-03T09:18:33.479Z</time>
+<wpt lat="55.3699738" lon="10.4256759"><time>2017-03-03T09:26:19.071Z</time><name>deep indoor gps</name><src>network</src></wpt>
+
+<wpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:25:31.957Z</time><name>building entrance gps</name><src>network</src></wpt>
+
+<wpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:24:31.919Z</time><name>building shows gps</name><src>network</src></wpt>
+
+<wpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:23:33.543Z</time><name>clear view gps</name><src>network</src></wpt>
+
+<wpt lat="55.3664064" lon="10.4309593"><time>2017-03-03T09:22:43.273Z</time><name>clear view gsm-gps</name><src>network</src></wpt>
+
+<wpt lat="55.3664064" lon="10.4309593"><time>2017-03-03T09:21:43.975Z</time><name>building shows gsm-gps</name><src>network</src></wpt>
+
+<wpt lat="55.3673632" lon="10.4311257"><time>2017-03-03T09:20:43.609Z</time><name>building indoor gsm-gps</name><src>network</src></wpt>
+
+<wpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:19:25.148Z</time><name>deep</name><src>network</src></wpt>
+
+<wpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:19:11.841Z</time><name>deep indoor gsm-gps </name><src>network</src></wpt>
+
+<wpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:18:33.479Z</time><name>deep indoor gsm-gps</name><src>network</src></wpt>
+<trk><trkseg><trkpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:18:33.479Z</time><src>network</src></trkpt>
+<trkpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:19:11.841Z</time><src>network</src></trkpt>
+<trkpt lat="55.3672787" lon="10.4310924"><time>2017-03-03T09:19:25.148Z</time><src>network</src></trkpt>
+<trkpt lat="55.3673632" lon="10.4311257"><time>2017-03-03T09:20:43.609Z</time><src>network</src></trkpt>
+<trkpt lat="55.3664064" lon="10.4309593"><time>2017-03-03T09:21:43.975Z</time><src>network</src></trkpt>
+<trkpt lat="55.3664064" lon="10.4309593"><time>2017-03-03T09:22:43.273Z</time><src>network</src></trkpt>
+<trkpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:23:33.543Z</time><src>network</src></trkpt>
+<trkpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:24:31.919Z</time><src>network</src></trkpt>
+<trkpt lat="55.3694263" lon="10.4279759"><time>2017-03-03T09:25:31.957Z</time><src>network</src></trkpt>
+<trkpt lat="55.3699738" lon="10.4256759"><time>2017-03-03T09:26:19.071Z</time><src>network</src></trkpt>
+</trkseg></trk></gpx>

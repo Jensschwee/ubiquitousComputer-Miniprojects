@@ -22,12 +22,13 @@ for(name in roomNames$V1)
     WiFiData = rbind(WiFiData,c(name,  mean(csv[csv$V3 ==  mac & csv$V1 == name,5]), mac))
   }
 }
+fisk = data.frame()
 
 WiFiData = WiFiData[2:nrow(WiFiData),]
 WiFiData = data.frame(WiFiData)
 names(WiFiData)[names(WiFiData) == "X3"] = "Mac address"
 test = transform(WiFiData, X2 = as.numeric(as.character(X2)))
-ggplot(data=test, aes(x=X1, y=X2, group= Mac.address, color= Mac.address)) +
+ggplot(data=fisk, aes(x=test$X1, y=test$X2, group= test$Mac.address, color= Mac.address)) +
   geom_line() +
   geom_point() +
   ylab("Signal Strength (dBm)") +

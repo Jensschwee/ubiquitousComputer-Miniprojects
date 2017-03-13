@@ -9,6 +9,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.kontakt.sdk.android.common.KontaktSDK;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -22,6 +23,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        KontaktSDK.initialize(this);
     }
 
 

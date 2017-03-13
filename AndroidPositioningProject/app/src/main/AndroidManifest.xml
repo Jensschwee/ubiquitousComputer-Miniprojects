@@ -42,6 +42,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="kontakt.io.API_KEY"
+            android:value="@string/kontakt_io_api_key" />
+
+
+        <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
     </application>
 
 </manifest>

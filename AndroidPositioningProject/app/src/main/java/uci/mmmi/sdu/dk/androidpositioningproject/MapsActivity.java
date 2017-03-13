@@ -1,5 +1,8 @@
 package uci.mmmi.sdu.dk.androidpositioningproject;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +30,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
         setContentView(R.layout.activity_maps);
         latText = (TextView) findViewById(R.id.latTextView);
         longText = (TextView) findViewById(R.id.longTextView);
@@ -38,7 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 gpsService = new GPSService(MapsActivity.this);
 
                 if(gpsService.canGetLocation()){
-
                     double latitude = gpsService.getLatitude();
                     double longitude = gpsService.getLongitude();
                     latText.setText("" + latitude);

@@ -1,6 +1,7 @@
 package uci.mmmi.sdu.dk.androidpositioningproject;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,6 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private GPSService gpsService;
+    private BLEService bleService;
     private TextView latText, longText, sensorText;
     private Button testGPSButton;
 
@@ -80,7 +82,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        KontaktSDK.initialize(this);
+
+        bleService = new BLEService();
+        if(savedInstanceState == null) {
+            Intent bluetoothService = new Intent(getApplicationContext(), BLEService.class);
+            startService(bluetoothService);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent bluetoothService = new Intent(getApplicationContext(), BLEService.class);
+        stopService(bluetoothService);
+        super.onDestroy();
     }
 
     /**

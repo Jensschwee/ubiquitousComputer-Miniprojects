@@ -6,7 +6,7 @@ package uci.mmmi.sdu.dk.androidpositioningproject.pojos;
  * Source: Halldór's and Peter's bachelor project.
  */
 public class OU44FeatureProperties {
-    public String type;
+    //public String type;
     public String RoomId;
     public String Class;
     public int ZLevel;

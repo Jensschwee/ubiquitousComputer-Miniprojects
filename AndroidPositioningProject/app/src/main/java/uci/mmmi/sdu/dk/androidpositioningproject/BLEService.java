@@ -159,20 +159,14 @@ public class BLEService extends Service {
     }
 
     private void sendPosition(IBeaconDevice device) {
-        System.out.println(device);
         if(device != null) {
             for(Beacons.beaconData beacon : JSONbeacons) {
-                System.out.println(beacon.alias.toString() + " " + device.getUniqueId());
                 if(beacon.alias.equals(device.getUniqueId())) {
                     Location location = new Location("KontaktBLE");
 
                     LatLng latLng = findRoomPosition(beacon);
-                    System.out.println(latLng);
                     location.setLatitude(latLng.latitude);
                     location.setLongitude(latLng.longitude);
-
-                    System.out.println(beacon.roomName);
-                    System.out.println(location);
 
                     blePositioningListener.positioningChanged(beacon.roomName, location);
                     break;
@@ -183,7 +177,7 @@ public class BLEService extends Service {
 
     private LatLng findRoomPosition(Beacons.beaconData beaconData) {
         for(OU44Feature f : ou44GeoJSONDoc.features) {
-            if(f.properties.RoomId.equals(beaconData.room)) {
+            if(f.properties.RoomId != null && f.properties.RoomId.equals(beaconData.room)) {
                 LatLngBounds.Builder b = LatLngBounds.builder();
                 for(int i = 0; i < f.geometry.coordinates[0].length - 1; i++) {
                     double[] point = f.geometry.coordinates[0][i];
@@ -206,6 +200,9 @@ public class BLEService extends Service {
             public void onIBeaconsUpdated(List<IBeaconDevice> ibeacons, IBeaconRegion region) {
                 super.onIBeaconsUpdated(ibeacons, region);
                 setClosestIBeacon(ibeacons);
+                if(ibeacons.size() == 0) {
+                    blePositioningListener.abandonedBLEBuildingZone();
+                }
                 Log.i("Sample", "IBeacon list: " + ibeacons.size());
             }
 

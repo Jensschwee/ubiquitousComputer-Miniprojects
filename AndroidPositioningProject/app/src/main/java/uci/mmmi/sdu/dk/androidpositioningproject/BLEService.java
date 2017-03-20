@@ -186,7 +186,7 @@ public class BLEService extends Service {
                 return b.build().getCenter();
             }
         }
-        return new LatLng(0, 0);
+        return new LatLng(55.3674083780001, 10.4307825390001);
     }
 
     private IBeaconListener createIBeaconListener() {

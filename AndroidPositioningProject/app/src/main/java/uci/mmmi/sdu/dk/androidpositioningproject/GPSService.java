@@ -16,6 +16,7 @@ import android.util.Log;
 public class GPSService extends Service implements LocationListener {
 
     private final Context mContext;
+    private final IGPSPositioningListener gpsPositioningListener;
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -34,17 +35,17 @@ public class GPSService extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = (long) (1000 * 60 * 0.25); // 0.25 minute
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSService(Context context) {
+    public GPSService(Context context, IGPSPositioningListener gpsPositioningListener) {
         this.mContext = context;
-        getLocation();
+        this.gpsPositioningListener = gpsPositioningListener;
     }
 
-    public Location getLocation() {
+    public Location startUsingGps() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
             // getting GPS status
@@ -100,7 +101,8 @@ public class GPSService extends Service implements LocationListener {
 
     public void stopUsingGPS() {
         if (locationManager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -110,7 +112,9 @@ public class GPSService extends Service implements LocationListener {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            locationManager.removeUpdates(GPSService.this); }
+            locationManager.removeUpdates(this);
+
+        }
     }
 
     public double getLatitude() {
@@ -135,8 +139,7 @@ public class GPSService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-
-
+        gpsPositioningListener.positioningChanged("Outside OU44", location);
     }
 
     @Override

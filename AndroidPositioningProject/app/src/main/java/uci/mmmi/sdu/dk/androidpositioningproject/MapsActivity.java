@@ -21,11 +21,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleSpaceListener;
 import com.kontakt.sdk.android.common.KontaktSDK;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, IGPSPositioningListener, IBLEPositioningListener {
 
     private GoogleMap mMap;
     private GPSService gpsService;
@@ -52,7 +53,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
         }
 
-
         setContentView(R.layout.activity_maps);
         latText = (TextView) findViewById(R.id.latTextView);
         longText = (TextView) findViewById(R.id.longTextView);
@@ -61,16 +61,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         testGPSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gpsService = new GPSService(MapsActivity.this);
+                gpsService = new GPSService(MapsActivity.this, MapsActivity.this);
 
-                if(gpsService.canGetLocation()){
+                if(gpsService.canGetLocation()) {
                     double latitude = gpsService.getLatitude();
                     double longitude = gpsService.getLongitude();
                     latText.setText("" + latitude);
                     longText.setText("" + longitude);
                     // \n is for new line
                     //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     // can't get location
                     // GPS or Network is not enabled
                     // Ask user to enable GPS/network in settings
@@ -83,17 +83,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        bleService = new BLEService();
-        if(savedInstanceState == null) {
-            Intent bluetoothService = new Intent(getApplicationContext(), BLEService.class);
-            startService(bluetoothService);
-        }
+        bleService = new BLEService(this, this);
+        bleService.enableBLE();
+        gpsService = new GPSService(this, this);
+        gpsService.startUsingGps();
     }
 
     @Override
     protected void onDestroy() {
-        Intent bluetoothService = new Intent(getApplicationContext(), BLEService.class);
-        stopService(bluetoothService);
         super.onDestroy();
     }
 
@@ -119,29 +116,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    @Override
     public void onConnected(@Nullable Bundle bundle) {
 
     }
@@ -149,5 +123,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void enteredBLEBuildingZone() {
+        gpsService.stopUsingGPS();
+    }
+
+    @Override
+    public void abandonedBLEBuildingZone() {
+        gpsService.startUsingGps();
+    }
+
+    @Override
+    public void positioningChanged(String positionName, Location location) {
+        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title(positionName));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        latText.setText("" + location.getLatitude());
+        longText.setText("" + location.getLongitude());
+        sensorText.setText(location.getProvider());
     }
 }

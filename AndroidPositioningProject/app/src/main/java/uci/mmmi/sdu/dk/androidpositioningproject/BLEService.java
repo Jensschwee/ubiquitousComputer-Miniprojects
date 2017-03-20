@@ -1,16 +1,20 @@
 package uci.mmmi.sdu.dk.androidpositioningproject;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.Gson;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
 import com.kontakt.sdk.android.ble.manager.ProximityManagerFactory;
-import com.kontakt.sdk.android.ble.manager.ProximityManagerImpl;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
 import com.kontakt.sdk.android.ble.manager.listeners.SpaceListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleIBeaconListener;
@@ -19,7 +23,17 @@ import com.kontakt.sdk.android.common.KontaktSDK;
 import com.kontakt.sdk.android.common.profile.IBeaconDevice;
 import com.kontakt.sdk.android.common.profile.IBeaconRegion;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+
+import uci.mmmi.sdu.dk.androidpositioningproject.pojos.Beacons;
+import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44Feature;
+import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44GeoJSONDoc;
 
 /**
  * Created by peter on 17-03-17.
@@ -29,6 +43,9 @@ public class BLEService extends Service {
 
     public static final int SCAN_INTERVAL = 30000; // milliseconds
     public static final int SCAN_TIME = 5000; // milliseconds
+
+    private final IBLEPositioningListener blePositioningListener;
+    private final Context context;
 
     private ProximityManager proximityManager;
 
@@ -46,6 +63,26 @@ public class BLEService extends Service {
         }
     };
 
+    private LinkedList<Beacons.beaconData> JSONbeacons;
+    private OU44GeoJSONDoc ou44GeoJSONDoc;
+
+    public BLEService(Context context, IBLEPositioningListener blePositioningListener) {
+        this.context = context;
+        this.blePositioningListener = blePositioningListener;
+
+        InputStream inStream = context.getResources().openRawResource(R.raw.beacons);
+        Reader rd = new BufferedReader(new InputStreamReader(inStream));
+        Gson gson = new Gson();
+        Beacons obj = gson.fromJson(rd, Beacons.class);
+        JSONbeacons = new LinkedList<>(Arrays.asList(obj.beacons));
+
+        InputStream inStream2 = context.getResources().openRawResource(R.raw.ou44_geometry);
+        Reader rd2 = new BufferedReader(new InputStreamReader(inStream2));
+        Gson gson2 = new Gson();
+        ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
+
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,12 +92,6 @@ public class BLEService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        KontaktSDK.initialize("YOUR_API_KEY");
-
-        proximityManager = ProximityManagerFactory.create(this);
-        proximityManager.setIBeaconListener(createIBeaconListener());
-        proximityManager.setSpaceListener(createSpaceListener());
-        startScanning();
     }
 
     @Override
@@ -82,6 +113,14 @@ public class BLEService extends Service {
         super.onDestroy();
     }
 
+    public void enableBLE() {
+        KontaktSDK.initialize("YOUR_API_KEY");
+        proximityManager = ProximityManagerFactory.create(context);
+        proximityManager.setIBeaconListener(createIBeaconListener());
+        proximityManager.setSpaceListener(createSpaceListener());
+        startScanning();
+    }
+
     private void startScanning() {
         proximityManager.connect(new OnServiceReadyListener() {
             @Override
@@ -98,6 +137,64 @@ public class BLEService extends Service {
         proximityManager.stopScanning();
     }
 
+    public void disableBLE() {
+        stopScanning();
+        handler.removeCallbacks(scanRunnable);
+        handler.removeCallbacks(scanStopRunnable);
+    }
+
+    private void setClosestIBeacon(List<IBeaconDevice> ibeacons) {
+        int highestRSSI = Integer.MIN_VALUE;
+        IBeaconDevice closestDevice = null;
+
+        for(IBeaconDevice device : ibeacons) {
+            int rssi = device.getRssi();
+            if(highestRSSI < rssi) {
+                highestRSSI = rssi;
+                closestDevice = device;
+                System.out.println(highestRSSI);
+            }
+        }
+        sendPosition(closestDevice);
+    }
+
+    private void sendPosition(IBeaconDevice device) {
+        System.out.println(device);
+        if(device != null) {
+            for(Beacons.beaconData beacon : JSONbeacons) {
+                System.out.println(beacon.alias.toString() + " " + device.getUniqueId());
+                if(beacon.alias.equals(device.getUniqueId())) {
+                    Location location = new Location("KontaktBLE");
+
+                    LatLng latLng = findRoomPosition(beacon);
+                    System.out.println(latLng);
+                    location.setLatitude(latLng.latitude);
+                    location.setLongitude(latLng.longitude);
+
+                    System.out.println(beacon.roomName);
+                    System.out.println(location);
+
+                    blePositioningListener.positioningChanged(beacon.roomName, location);
+                    break;
+                }
+            }
+        }
+    }
+
+    private LatLng findRoomPosition(Beacons.beaconData beaconData) {
+        for(OU44Feature f : ou44GeoJSONDoc.features) {
+            if(f.properties.RoomId.equals(beaconData.room)) {
+                LatLngBounds.Builder b = LatLngBounds.builder();
+                for(int i = 0; i < f.geometry.coordinates[0].length - 1; i++) {
+                    double[] point = f.geometry.coordinates[0][i];
+                    b.include(new LatLng(point[1], point[0]));
+                }
+                return b.build().getCenter();
+            }
+        }
+        return new LatLng(0, 0);
+    }
+
     private IBeaconListener createIBeaconListener() {
         return new SimpleIBeaconListener() {
             @Override
@@ -108,7 +205,8 @@ public class BLEService extends Service {
             @Override
             public void onIBeaconsUpdated(List<IBeaconDevice> ibeacons, IBeaconRegion region) {
                 super.onIBeaconsUpdated(ibeacons, region);
-                Log.i("Sample", "IBeacons: " + ibeacons.size());
+                setClosestIBeacon(ibeacons);
+                Log.i("Sample", "IBeacon list: " + ibeacons.size());
             }
 
             @Override
@@ -124,13 +222,15 @@ public class BLEService extends Service {
             @Override
             public void onRegionEntered(IBeaconRegion region) {
                 super.onRegionEntered(region);
-                Log.i("Sample", "Region entered: " + region.toString());
+                blePositioningListener.enteredBLEBuildingZone();
+                Log.i("Sample", "Region entered");
             }
 
             @Override
             public void onRegionAbandoned(IBeaconRegion region) {
                 super.onRegionAbandoned(region);
-                Log.i("Sample", "Region abandoned: " + region.toString());
+                blePositioningListener.abandonedBLEBuildingZone();
+                Log.i("Sample", "Region ababa");
             }
         };
     }

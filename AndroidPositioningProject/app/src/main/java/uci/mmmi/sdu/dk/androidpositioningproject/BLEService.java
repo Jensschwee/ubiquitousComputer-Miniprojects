@@ -12,7 +12,10 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
+import com.kontakt.sdk.android.ble.configuration.ScanMode;
+import com.kontakt.sdk.android.ble.configuration.ScanPeriod;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
+import com.kontakt.sdk.android.ble.device.BeaconRegion;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
 import com.kontakt.sdk.android.ble.manager.ProximityManagerFactory;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
@@ -30,6 +33,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import uci.mmmi.sdu.dk.androidpositioningproject.pojos.Beacons;
 import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44Feature;
@@ -41,13 +45,14 @@ import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44GeoJSONDoc;
 
 public class BLEService extends Service {
 
-    public static final int SCAN_INTERVAL = 30000; // milliseconds
+    public static final int SCAN_INTERVAL = 5001; // milliseconds
     public static final int SCAN_TIME = 5000; // milliseconds
 
     private final IBLEPositioningListener blePositioningListener;
     private final Context context;
 
     private ProximityManager proximityManager;
+    private IBeaconRegion beaconRegion = BeaconRegion.builder().identifier("lala").proximity(UUID.fromString("f7826da6-4fa2-4e98-8024-bc5b71e0893e")).build();
 
     private Handler handler = new Handler();
     private Runnable scanRunnable = new Runnable() {
@@ -107,30 +112,38 @@ public class BLEService extends Service {
 
     @Override
     public void onDestroy() {
-        handler.removeCallbacks(scanRunnable);
         proximityManager.disconnect();
         proximityManager = null;
         super.onDestroy();
     }
 
     public void enableBLE() {
+        // Setup of the Kontakt.io API inspired by:
+        // https://github.com/kontaktio/kontakt-beacon-admin-sample-app/blob/master/sample-app/src/main/java/com/kontakt/sample/samples/ScanRegionsActivity.java
         KontaktSDK.initialize("YOUR_API_KEY");
         proximityManager = ProximityManagerFactory.create(context);
+        proximityManager.configuration()
+                .scanPeriod(ScanPeriod.RANGING)
+                .scanMode(ScanMode.BALANCED)
+                .deviceUpdateCallbackInterval(SCAN_INTERVAL);
+        proximityManager.spaces().iBeaconRegion(beaconRegion);
         proximityManager.setIBeaconListener(createIBeaconListener());
         proximityManager.setSpaceListener(createSpaceListener());
         startScanning();
     }
 
     private void startScanning() {
-        proximityManager.connect(new OnServiceReadyListener() {
-            @Override
-            public void onServiceReady() {
-                proximityManager.startScanning();
-            }
-        });
-
-        handler.postDelayed(scanRunnable, SCAN_INTERVAL);
-        handler.postDelayed(scanStopRunnable, SCAN_TIME);
+        if(!proximityManager.isConnected()) {
+            proximityManager.connect(new OnServiceReadyListener() {
+                @Override
+                public void onServiceReady() {
+                    proximityManager.startScanning();
+                }
+            });
+        }
+        else {
+            proximityManager.restartScanning();
+        }
     }
 
     private void stopScanning() {
@@ -139,8 +152,6 @@ public class BLEService extends Service {
 
     public void disableBLE() {
         stopScanning();
-        handler.removeCallbacks(scanRunnable);
-        handler.removeCallbacks(scanStopRunnable);
     }
 
     private void setClosestIBeacon(List<IBeaconDevice> ibeacons) {

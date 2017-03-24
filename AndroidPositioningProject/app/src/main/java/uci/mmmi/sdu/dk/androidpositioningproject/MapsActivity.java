@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if( handlePermissions() ) {
+        if(handlePermissions() ) {
             bleService = new BLEService(this, this);
             bleService.enableBLE();
             gpsService = new GPSService(this, this);
@@ -86,8 +87,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Soruce https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
      */
     protected boolean handlePermissions() {
-        boolean consent = false;
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
@@ -100,11 +99,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Manifest.permission.BLUETOOTH_ADMIN
                     },
                     1);
-            consent = false;
+            return false;
         } else {
-            consent = true;
+            Log.d("test", "Permission");
+            return true;
         }
-        return consent;
     }
 
     /**
@@ -127,6 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 allowed.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 allowed.contains(Manifest.permission.BLUETOOTH) &&
                 allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
+            bleService = new BLEService(this, this);
+            bleService.enableBLE();
             gpsService = new GPSService(this, this);
             gpsService.startUsingGps();
         }
@@ -150,8 +151,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         System.out.print("Map");
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
         LatLng odense = new LatLng(55.368225, 10.426634);
         mMap.addMarker(new MarkerOptions().position(odense).title("Marker in Odense"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(odense));

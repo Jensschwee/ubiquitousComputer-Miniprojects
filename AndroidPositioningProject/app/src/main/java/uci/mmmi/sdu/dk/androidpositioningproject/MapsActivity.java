@@ -83,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Makes sure that all of our permission requests have been handled
      * LOCATION HANDLERS ARE FOR API-24 AND UP
+     * Soruce https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
      */
     protected boolean handlePermissions() {
         boolean consent = false;
@@ -106,6 +107,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return consent;
     }
 
+    /**
+     * Soruce https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {

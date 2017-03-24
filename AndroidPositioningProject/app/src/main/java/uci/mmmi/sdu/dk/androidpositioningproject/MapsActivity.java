@@ -36,7 +36,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GPSService gpsService;
     private BLEService bleService;
     private TextView latText, longText, sensorText;
-    private Button testGPSButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +51,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latText = (TextView) findViewById(R.id.latTextView);
         longText = (TextView) findViewById(R.id.longTextView);
         sensorText = (TextView) findViewById(R.id.sensorTextView);
-        testGPSButton = (Button) findViewById(R.id.gpsTestButton);
-        /*testGPSButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gpsService = new GPSService(MapsActivity.this, MapsActivity.this);
-
-                if(gpsService.canGetLocation()) {
-                    double latitude = gpsService.getLatitude();
-                    double longitude = gpsService.getLongitude();
-                    latText.setText("" + latitude);
-                    longText.setText("" + longitude);
-                    // \n is for new line
-                    //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                } else {
-                    // can't get location
-                    // GPS or Network is not enabled
-                    // Ask user to enable GPS/network in settings
-                    //gpsService.showSettingsAlert();
-                }
-            }
-        });*/
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -101,7 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     1);
             return false;
         } else {
-            Log.d("test", "Permission");
             return true;
         }
     }
@@ -149,7 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.print("Map");
         mMap = googleMap;
         LatLng odense = new LatLng(55.368225, 10.426634);
         mMap.addMarker(new MarkerOptions().position(odense).title("Marker in Odense"));

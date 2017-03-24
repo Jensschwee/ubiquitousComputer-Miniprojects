@@ -41,12 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SENSOR USED"/>
-            <Button
-                android:layout_weight="1"
-                android:id="@+id/gpsTestButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Test GPS"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleSpaceListener;
 import com.kontakt.sdk.android.common.KontaktSDK;
+
+import java.util.ArrayList;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
@@ -37,20 +40,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, 1);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 1);
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
+        if( handlePermissions() ) {
+            bleService = new BLEService(this, this);
+            bleService.enableBLE();
+            gpsService = new GPSService(this, this);
+            gpsService.startUsingGps();
         }
 
         setContentView(R.layout.activity_maps);
@@ -58,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         longText = (TextView) findViewById(R.id.longTextView);
         sensorText = (TextView) findViewById(R.id.sensorTextView);
         testGPSButton = (Button) findViewById(R.id.gpsTestButton);
-        testGPSButton.setOnClickListener(new View.OnClickListener() {
+        /*testGPSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gpsService = new GPSService(MapsActivity.this, MapsActivity.this);
@@ -77,16 +71,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //gpsService.showSettingsAlert();
                 }
             }
-        });
+        });*/
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        bleService = new BLEService(this, this);
-        bleService.enableBLE();
-        gpsService = new GPSService(this, this);
-        gpsService.startUsingGps();
+
+    }
+
+    /**
+     * Makes sure that all of our permission requests have been handled
+     * LOCATION HANDLERS ARE FOR API-24 AND UP
+     */
+    protected boolean handlePermissions() {
+        boolean consent = false;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.BLUETOOTH,
+                            Manifest.permission.BLUETOOTH_ADMIN
+                    },
+                    1);
+            consent = false;
+        } else {
+            consent = true;
+        }
+        return consent;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        ArrayList<String> allowed = new ArrayList<String>();
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults[i] <= 0) {
+                allowed.add(permissions[i]);
+            }
+        }
+        //Call out location service starter if all is good thank fuck for api-24 n' up
+        if (allowed.contains(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                allowed.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                allowed.contains(Manifest.permission.BLUETOOTH) &&
+                allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
+            gpsService = new GPSService(this, this);
+            gpsService.startUsingGps();
+        }
     }
 
     @Override

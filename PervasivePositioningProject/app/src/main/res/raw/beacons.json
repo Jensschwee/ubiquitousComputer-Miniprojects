@@ -1,0 +1,401 @@
+{
+  "beacons": [
+    {
+      "alias":"sx8Z",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "64188",
+      "minor": "8924",
+      "instanceId":"725972556c53",
+      "room": "Ø21-600b-00",
+      "level": "-1 (Kaelder)",
+      "roomName": "Atrie"
+    },
+    {
+      "alias": "5f4E",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "41364",
+      "minor": "41346",
+      "instanceId":"74506170746d",
+      "room": "Ø20-604-0",
+      "level": "0 (Parterre)",
+      "roomName": "Studiezone"
+    },
+    {
+      "alias":"HwqA",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "32612",
+      "minor": "49367",
+      "instanceId":"6361434d7a49",
+      "room": "Ø20-603-0",
+      "level": "0 (Parterre)",
+      "roomName": "U168"
+    },
+    {
+      "alias":"9N4C",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "35081",
+      "minor": "21575",
+      "instanceId":"736c3056676a",
+      "room": "Ø20-601b-0",
+      "level": "0 (Parterre)",
+      "roomName": "U167"
+    },
+    {
+      "alias":"iqvD",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "26230",
+      "minor": "32320",
+      "instanceId":"63795930314f",
+      "room": "Ø20-600b-0",
+      "level": "0 (Parterre)",
+      "roomName": "Gang"
+    },
+    {
+      "alias":"QP9Y",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "3427",
+      "minor": "57257",
+      "instanceId":"753848687567",
+      "room": "Ø20-511-0",
+      "level": "0 (Parterre)",
+      "roomName": "U166"
+    },
+    {
+      "alias":"S5XN",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "25687",
+      "minor": "5363",
+      "instanceId":"6472586c414f",
+      "room": "Ø20-510a-0",
+      "level": "0 (Parterre)",
+      "roomName": "U165"
+    },
+    {
+      "alias":"3rMl",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "31442",
+      "minor": "38598",
+      "instanceId":"383554396c34",
+      "room": "Ø20-508a-0",
+      "level": "0 (Parterre)",
+      "roomName": "Studiezone"
+    },
+    {
+      "alias":"gkKV",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "21069",
+      "minor": "61587",
+      "instanceId":"41707a67524b",
+      "room": "Ø22-604-0",
+      "level": "0 (Parterre)",
+      "roomName": "Studiezone"
+    },
+    {
+      "alias":"KdtM",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "47511",
+      "minor": "49394",
+      "instanceId":"62537235324a",
+      "room": "Ø22-603-0",
+      "level": "0 (Parterre)",
+      "roomName": "U164"
+    },
+    {
+      "alias":"krQd",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "15343",
+      "minor": "54679",
+      "instanceId":"6d334f476c4e",
+      "room": "Ø22-601b-0",
+      "level": "0 (Parterre)",
+      "roomName": "U163"
+    },
+    {
+      "alias":"1XIJ",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "42586",
+      "minor": "14481",
+      "instanceId":"6b6d485a3262",
+      "room": "Ø22-600b-0",
+      "level": "0 (Parterre)",
+      "roomName": "Gang"
+    },
+    {
+      "alias":"LxPa",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "55763",
+      "minor": "15242",
+      "instanceId":"784133754a42",
+      "room": "Ø22-512a-0",
+      "level": "0 (Parterre)",
+      "roomName": "U162"
+    },
+    {
+      "alias":"Y2bm",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "50434",
+      "minor": "31363",
+      "instanceId":"42556c577535",
+      "room": "Ø22-511-0",
+      "level": "0 (Parterre)",
+      "roomName": "U161"
+    },
+    {
+      "alias":"h6YJ",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "65321",
+      "minor": "54028",
+      "instanceId":"6f365048624e",
+      "room": "Ø22-510-0",
+      "level": "0 (Parterre)",
+      "roomName": "U160"
+    },
+    {
+      "alias":"F29K",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "5228",
+      "minor": "2150",
+      "instanceId":"624c67775232",
+      "room": "Ø22-508-0",
+      "level": "0 (Parterre)",
+      "roomName": "Studiezone"
+    },
+    {
+      "alias":"z5gv",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "11539",
+      "minor": "14848",
+      "instanceId":"763872316a55",
+      "room": "Ø22-507-0",
+      "level": "0 (Parterre)",
+      "roomName": "Trappe"
+    },
+    {
+      "alias":"Ras3",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "39765",
+      "minor": "51554",
+      "instanceId":"4b4d5a346551",
+      "room": "Ø21-600b-0",
+      "level": "0 (Parterre)",
+      "roomName": "Atrie"
+    },
+    {
+      "alias":"Vkrs",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "31123",
+      "minor": "14424",
+      "instanceId":"4c3537374c4f",
+      "room": "Ø20-606-0",
+      "level": "0 (Parterre)",
+      "roomName": "Trappe"
+    },
+    {
+      "alias":"RPpW",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "20248",
+      "minor": "36624",
+      "instanceId":"41346c4b6f74",
+      "room": "Ø21-602-0",
+      "level": "0 (Parterre)",
+      "roomName": "Gang"
+    },
+    {
+      "alias":"3UUi",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "51255",
+      "minor": "54103",
+      "instanceId":"6c396364396f",
+      "room": "Ø21-511-0",
+      "level": "0 (Parterre)",
+      "roomName": "Gang"
+    },
+    {
+      "alias":"rSfe",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "25179",
+      "minor": "39756",
+      "instanceId":"634f4e586e6a",
+      "room": "Ø22-508-1",
+      "level": "1 (Stuen)",
+      "roomName": "Studiezone"
+    },
+    {
+      "alias":"koHK",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "46757",
+      "minor": "60720",
+      "instanceId":"465044327862",
+      "room": "Ø22-510-1",
+      "level": "1 (Stuen)",
+      "roomName": "U171"
+    },
+    {
+      "alias":"CffO",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "62387",
+      "minor": "52816",
+      "instanceId":"4e6756495a76",
+      "room": "Ø22-511-1",
+      "level": "1 (Stuen)",
+      "roomName": "U170"
+    },
+    {
+      "alias":"NEcd",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "13423",
+      "minor": "25842",
+      "instanceId":"4c65786a7970",
+      "room": "Ø22-601b-1",
+      "level": "1 (Stuen)",
+      "roomName": "U177"
+    },
+    {
+      "alias":"dHSx",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "62751",
+      "minor": "26119",
+      "instanceId":"37556f337330",
+      "room": "Ø22-603-1",
+      "level": "1 (Stuen)",
+      "roomName": "U176"
+    },{
+      "alias":"n1hZ",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "7983",
+      "minor": "13143",
+      "instanceId":"56415236384d",
+      "room": "Ø22-604-1",
+      "level": "1 (Stuen)",
+      "roomName": "Studiezone"
+    },{
+      "alias":"0bNm",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "35861",
+      "minor": "50998",
+      "instanceId":"38566a625350",
+      "room": "Ø20-508a-1",
+      "level": "1 (Stuen)",
+      "roomName": "Studiezone"
+    },{
+      "alias":"GZGz",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "29925",
+      "minor": "29298",
+      "instanceId":"766c4335614e",
+      "room": "Ø20-510-1",
+      "level": "1 (Stuen)",
+      "roomName": "U172"
+    },{
+      "alias":"76bB",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "12774",
+      "minor": "25706",
+      "instanceId":"577870305979",
+      "room": "Ø20-511-1",
+      "level": "1 (Stuen)",
+      "roomName": "U173"
+    },{
+      "alias":"1AGP",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "38304",
+      "minor": "9434",
+      "instanceId":"534a68675569",
+      "room": "Ø20-601b-1",
+      "level": "1 (Stuen)",
+      "roomName": "U174"
+    },{
+      "alias":"RN94",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "50122",
+      "minor": "32251",
+      "instanceId":"6a6f57377938",
+      "room": "Ø20-603-1",
+      "level": "1 (Stuen)",
+      "roomName": "U175"
+    },{
+      "alias":"6qXL",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "37311",
+      "minor": "48078",
+      "instanceId":"31493971544a",
+      "room": "Ø20-604b-1",
+      "level": "1 (Stuen)",
+      "roomName": "Studiezone"
+    },{
+      "alias":"m6ZW",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "14180",
+      "minor": "12252",
+      "instanceId":"596b7a546950",
+      "room": "Ø21-600c-1",
+      "level": "1 (Stuen)",
+      "roomName": "Trappe"
+    },{
+      "alias":"Eh6f",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "13659",
+      "minor": "28589",
+      "instanceId":"5a3549557579",
+      "room": "Ø21-600b-1",
+      "level": "1 (Stuen)",
+      "roomName": "Atrie"
+    },{
+      "alias":"23ip",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "24578",
+      "minor": "42582",
+      "instanceId":"4d5959587774",
+      "room": "Ø20-600b-1",
+      "level": "1 (Stuen)",
+      "roomName": "Gang"
+    },{
+      "alias":"oPSB",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "41161",
+      "minor": "36727",
+      "instanceId":"5535654e5856",
+      "room": "Ø20-601b-2",
+      "level": "2 (1.sal)",
+      "roomName": "U182"
+    },{
+      "alias":"bR6t",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "2354",
+      "minor": "62255",
+      "instanceId":"346d72794765",
+      "room": "Ø20-511-2",
+      "level": "2 (1.sal)",
+      "roomName": "U183"
+    },{
+      "alias":"FNWl",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "33271",
+      "minor": "8212",
+      "instanceId":"53366a556344",
+      "room": "Ø21-600b-2",
+      "level": "2 (1.sal)",
+      "roomName": "Atrie"
+    },
+    {
+      "alias":"zhSV",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "45284",
+      "minor": "34133",
+      "instanceId":"6a6536457446",
+      "room": "Ø22-601b-2",
+      "level": "2 (1.sal)",
+      "roomName": "U181"
+    },
+    {
+      "alias":"64AZ",
+      "UUID": "f7826da6-4fa2-4e98-8024-bc5b71e0893e",
+      "major": "40821",
+      "minor": "55588",
+      "instanceId":"787444644336",
+      "room": "Ø22-511-2",
+      "level": "2 (1.sal)",
+      "roomName": "U180"
+    }
+  ]
+}

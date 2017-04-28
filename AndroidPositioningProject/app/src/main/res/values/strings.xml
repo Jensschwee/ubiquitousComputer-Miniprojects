@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">AndroidPositioningProject</string>
-    <string name="title_activity_maps">Map</string>
-    <!-- KontaktSDK strings -->
-    <string name="kontakt_io_api_key">YOUR API KEY</string>
-</resources>

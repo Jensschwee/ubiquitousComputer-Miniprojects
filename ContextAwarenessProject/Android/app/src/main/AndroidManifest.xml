@@ -52,11 +52,11 @@
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
         <service
-            android:name=".GPSService"
+            android:name=".services.GPSService"
             android:enabled="true"
             android:exported="true"></service>
         <service
-            android:name=".BLEService"
+            android:name=".services.KontaktBLEService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

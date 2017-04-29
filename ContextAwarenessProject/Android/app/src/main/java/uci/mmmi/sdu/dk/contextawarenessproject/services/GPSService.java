@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.contextawarenessproject;
+package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
 import android.Manifest;
 import android.app.Service;
@@ -13,10 +13,11 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import uci.mmmi.sdu.dk.contextawarenessproject.MapsActivity;
+
 public class GPSService extends Service implements LocationListener {
 
-    private final Context mContext;
-    private final IGPSPositioningListener gpsPositioningListener;
+    private Context mContext;
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -39,11 +40,6 @@ public class GPSService extends Service implements LocationListener {
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
-
-    public GPSService(Context context, IGPSPositioningListener gpsPositioningListener) {
-        this.mContext = context;
-        this.gpsPositioningListener = gpsPositioningListener;
-    }
 
     public Location startUsingGps() {
         try {
@@ -138,8 +134,27 @@ public class GPSService extends Service implements LocationListener {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = getApplicationContext();
+        startUsingGps();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopUsingGPS();
+    }
+
+    @Override
     public void onLocationChanged(Location location) {
-        gpsPositioningListener.positioningChanged("Outside OU44", location);
+        Intent intent = new Intent(MapsActivity.LOCATION_UPDATED);
+        intent.putExtra("provider", location.getProvider());
+        intent.putExtra("lat", location.getLatitude());
+        intent.putExtra("lng", location.getLongitude());
+        intent.putExtra("location", "Outside OU44");
+        getApplicationContext().sendBroadcast(intent);
+        Log.d("GPSService", "Sending: " + intent.toString());
     }
 
     @Override

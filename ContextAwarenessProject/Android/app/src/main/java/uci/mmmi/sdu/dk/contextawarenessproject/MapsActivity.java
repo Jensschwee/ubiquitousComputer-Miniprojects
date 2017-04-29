@@ -1,6 +1,10 @@
 package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.Nullable;
@@ -8,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,28 +24,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+
+import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, IGPSPositioningListener, IBLEPositioningListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
 
-    // ubicom.herokuapp.com
-
-
+    public static final String LOCATION_UPDATED = "locationupdated";
 
     private GoogleMap mMap;
-    private GPSService gpsService;
-    private BLEService bleService;
     private TextView latText, longText, sensorText;
+    private BroadcastReceiver locationUpdatedReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(handlePermissions() ) {
-            bleService = new BLEService(this, this);
-            bleService.enableBLE();
-            gpsService = new GPSService(this, this);
-            gpsService.startUsingGps();
+            startService(new Intent(this, KontaktBLEService.class));
+            startService(new Intent(this, GPSService.class));
         }
 
         setContentView(R.layout.activity_maps);
@@ -51,6 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        locationUpdatedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String provider = intent.getStringExtra("provider");
+                double lat = intent.getDoubleExtra("lat", 0);
+                double lng = intent.getDoubleExtra("lng", 0);
+                String location = intent.getStringExtra("location");
+
+
+                Log.d("Location Updated", provider + ": " + location);
+
+                positioningChanged(provider, lat, lng, location);
+            }
+        };
+        registerReceiver(locationUpdatedReceiver, new IntentFilter(LOCATION_UPDATED)); // TODO: It complains over a leaked receiver when quitting the app. Make a separate BroadcastReceiver.
 
         // TODO: Generate and save UUID in SharedPreferences.
         /*DeviceStatus s = new DeviceStatus(UUID.randomUUID(), "U165", DeviceStatus.Status.IN, "testy test");
@@ -70,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Makes sure that all of our permission requests have been handled
      * LOCATION HANDLERS ARE FOR API-24 AND UP
-     * Soruce https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
+     * Source https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
      */
     protected boolean handlePermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -92,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Soruce https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
+     * Source https://github.com/LennartOlsen/ble-sense/blob/master/app/src/main/java/net/lennartolsen/blescanner/MainActivity.java#L60
      * @param requestCode
      * @param permissions
      * @param grantResults
@@ -111,10 +130,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 allowed.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 allowed.contains(Manifest.permission.BLUETOOTH) &&
                 allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
-            bleService = new BLEService(this, this);
-            bleService.enableBLE();
-            gpsService = new GPSService(this, this);
-            gpsService.startUsingGps();
+            startService(new Intent(this, KontaktBLEService.class));
+            startService(new Intent(this, GPSService.class));
         }
     }
 
@@ -151,24 +168,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    @Override
-    public void enteredBLEBuildingZone() {
-        gpsService.stopUsingGPS();
-    }
-
-    @Override
-    public void abandonedBLEBuildingZone() {
-        gpsService.startUsingGps();
-    }
-
-    @Override
-    public void positioningChanged(String positionName, Location location) {
-        LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+    public void positioningChanged(String provider, double lat, double lng, String location) {
+        LatLng currentLocation = new LatLng(lat, lng);
         mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title(positionName));
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-        latText.setText("" + location.getLatitude());
-        longText.setText("" + location.getLongitude());
-        sensorText.setText(location.getProvider());
+        latText.setText("" + lat);
+        longText.setText("" + lng);
+        sensorText.setText(provider);
     }
 }

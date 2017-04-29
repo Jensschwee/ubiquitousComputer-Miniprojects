@@ -1,20 +1,14 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,14 +17,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleSpaceListener;
-import com.kontakt.sdk.android.common.KontaktSDK;
 
 import java.util.ArrayList;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, IGPSPositioningListener, IBLEPositioningListener {
+
+    // ubicom.herokuapp.com
+
+
 
     private GoogleMap mMap;
     private GPSService gpsService;
@@ -51,12 +47,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latText = (TextView) findViewById(R.id.latTextView);
         longText = (TextView) findViewById(R.id.longTextView);
         sensorText = (TextView) findViewById(R.id.sensorTextView);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
+        // TODO: Generate and save UUID in SharedPreferences.
+        /*DeviceStatus s = new DeviceStatus(UUID.randomUUID(), "U165", DeviceStatus.Status.IN, "testy test");
+        NetworkManager.getInstance(this).getUbicomService().sendDeviceStatus(s.deviceId.toString(), s).enqueue(new Callback<DeviceStatus>() {
+            @Override
+            public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<DeviceStatus> call, Throwable t) {
+
+            }
+        });*/
     }
 
     /**

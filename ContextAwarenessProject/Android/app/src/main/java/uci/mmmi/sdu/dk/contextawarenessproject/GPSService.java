@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
 import android.app.Service;

@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject.pojos;
+package uci.mmmi.sdu.dk.contextawarenessproject.pojos;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject.pojos;
+package uci.mmmi.sdu.dk.contextawarenessproject.pojos;
 
 /**
  * This class is used for parsing a JSON file containing location information

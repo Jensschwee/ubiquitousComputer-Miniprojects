@@ -51,5 +51,5 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="uci.mmmi.sdu.dk.androidpositioningproject.MapsActivity" />
+        tools:context="uci.mmmi.sdu.dk.contextawarenessproject.MapsActivity" />
 </LinearLayout>

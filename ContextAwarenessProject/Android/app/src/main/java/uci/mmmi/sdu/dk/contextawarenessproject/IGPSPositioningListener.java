@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 /**
  * Created by peter on 20-03-17.

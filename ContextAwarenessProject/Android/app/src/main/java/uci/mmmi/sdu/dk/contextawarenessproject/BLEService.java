@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.app.Service;
 import android.content.Context;
@@ -35,9 +35,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.Beacons;
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44Feature;
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44GeoJSONDoc;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.Beacons;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Feature;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44GeoJSONDoc;
 
 /**
  * Created by peter on 17-03-17.
@@ -85,7 +85,6 @@ public class BLEService extends Service {
         Reader rd2 = new BufferedReader(new InputStreamReader(inStream2));
         Gson gson2 = new Gson();
         ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
-
     }
 
     @Nullable

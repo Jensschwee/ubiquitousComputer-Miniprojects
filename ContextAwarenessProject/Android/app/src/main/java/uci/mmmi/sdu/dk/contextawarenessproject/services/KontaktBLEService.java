@@ -179,6 +179,7 @@ public class KontaktBLEService extends Service {
                     intent.putExtra("lat", latLng.latitude);
                     intent.putExtra("lng", latLng.longitude);
                     intent.putExtra("location", beacon.roomName);
+                    intent.putExtra("roomId", beacon.room);
                     getApplicationContext().sendBroadcast(intent);
                     Log.d("KontaktBLEService", "Sending: " + intent.toString());
                     break;

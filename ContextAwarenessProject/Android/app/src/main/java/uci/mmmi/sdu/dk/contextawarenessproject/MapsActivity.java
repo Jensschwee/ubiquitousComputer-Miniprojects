@@ -62,11 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double lat = intent.getDoubleExtra("lat", 0);
                 double lng = intent.getDoubleExtra("lng", 0);
                 String location = intent.getStringExtra("location");
-
+                String roomId = intent.getStringExtra("roomId");
 
                 Log.d("Location Updated", provider + ": " + location);
 
-                positioningChanged(provider, lat, lng, location);
+                positioningChanged(provider, lat, lng, location, roomId);
             }
         };
         registerReceiver(locationUpdatedReceiver, new IntentFilter(LOCATION_UPDATED)); // TODO: It complains over a leaked receiver when quitting the app. Make a separate BroadcastReceiver.
@@ -168,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void positioningChanged(String provider, double lat, double lng, String location) {
+    public void positioningChanged(String provider, double lat, double lng, String location, String roomId) {
         LatLng currentLocation = new LatLng(lat, lng);
         mMap.clear();
         mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));

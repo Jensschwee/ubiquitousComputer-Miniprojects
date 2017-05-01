@@ -17,11 +17,13 @@ public class DeviceStatus {
     public String username;
     public Status status;
     public String location;
+    public String roomId;
 
-    public DeviceStatus(UUID deviceId, String username, Status status, String location) {
+    public DeviceStatus(UUID deviceId, String username, Status status, String location, String roomId) {
         this.deviceId = deviceId;
         this.username = username;
         this.status = status;
         this.location = location;
+        this.roomId = roomId;
     }
 }

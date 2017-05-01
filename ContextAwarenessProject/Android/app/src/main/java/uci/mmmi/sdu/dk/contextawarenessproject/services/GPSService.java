@@ -153,6 +153,7 @@ public class GPSService extends Service implements LocationListener {
         intent.putExtra("lat", location.getLatitude());
         intent.putExtra("lng", location.getLongitude());
         intent.putExtra("location", "Outside OU44");
+        intent.putExtra("roomId", "");
         getApplicationContext().sendBroadcast(intent);
         Log.d("GPSService", "Sending: " + intent.toString());
     }

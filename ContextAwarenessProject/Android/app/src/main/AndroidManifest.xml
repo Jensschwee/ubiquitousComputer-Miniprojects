@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uci.mmmi.sdu.dk.androidpositioningproject">
+    package="uci.mmmi.sdu.dk.contextawarenessproject">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -52,11 +52,11 @@
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
         <service
-            android:name=".GPSService"
+            android:name=".services.GPSService"
             android:enabled="true"
             android:exported="true"></service>
         <service
-            android:name=".BLEService"
+            android:name=".services.KontaktBLEService"
             android:enabled="true"
             android:exported="true"></service>
     </application>

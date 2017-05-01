@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import org.junit.Test;
 

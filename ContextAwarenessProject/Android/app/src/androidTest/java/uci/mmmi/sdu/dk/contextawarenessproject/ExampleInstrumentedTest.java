@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

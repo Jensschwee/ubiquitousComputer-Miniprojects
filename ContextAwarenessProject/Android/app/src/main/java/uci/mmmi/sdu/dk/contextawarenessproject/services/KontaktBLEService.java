@@ -1,9 +1,8 @@
-package uci.mmmi.sdu.dk.androidpositioningproject;
+package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -35,21 +34,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.Beacons;
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44Feature;
-import uci.mmmi.sdu.dk.androidpositioningproject.pojos.OU44GeoJSONDoc;
+import uci.mmmi.sdu.dk.contextawarenessproject.MapsActivity;
+import uci.mmmi.sdu.dk.contextawarenessproject.R;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.Beacons;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Feature;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44GeoJSONDoc;
 
 /**
  * Created by peter on 17-03-17.
  */
 
-public class BLEService extends Service {
+public class KontaktBLEService extends Service {
 
     public static final int SCAN_INTERVAL = 5001; // milliseconds
     public static final int SCAN_TIME = 5000; // milliseconds
 
-    private final IBLEPositioningListener blePositioningListener;
-    private final Context context;
+    private Context context;
 
     private ProximityManager proximityManager;
     private IBeaconRegion beaconRegion = BeaconRegion.builder().identifier("lala").proximity(UUID.fromString("f7826da6-4fa2-4e98-8024-bc5b71e0893e")).build();
@@ -71,9 +71,18 @@ public class BLEService extends Service {
     private LinkedList<Beacons.beaconData> JSONbeacons;
     private OU44GeoJSONDoc ou44GeoJSONDoc;
 
-    public BLEService(Context context, IBLEPositioningListener blePositioningListener) {
-        this.context = context;
-        this.blePositioningListener = blePositioningListener;
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        context = getApplicationContext();
 
         InputStream inStream = context.getResources().openRawResource(R.raw.beacons);
         Reader rd = new BufferedReader(new InputStreamReader(inStream));
@@ -86,17 +95,7 @@ public class BLEService extends Service {
         Gson gson2 = new Gson();
         ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
 
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
+        enableBLE();
     }
 
     @Override
@@ -173,13 +172,15 @@ public class BLEService extends Service {
         if(device != null) {
             for(Beacons.beaconData beacon : JSONbeacons) {
                 if(beacon.alias.equals(device.getUniqueId())) {
-                    Location location = new Location("KontaktBLE");
-
                     LatLng latLng = findRoomPosition(beacon);
-                    location.setLatitude(latLng.latitude);
-                    location.setLongitude(latLng.longitude);
 
-                    blePositioningListener.positioningChanged(beacon.roomName, location);
+                    Intent intent = new Intent(MapsActivity.LOCATION_UPDATED);
+                    intent.putExtra("provider", "KontaktBLE");
+                    intent.putExtra("lat", latLng.latitude);
+                    intent.putExtra("lng", latLng.longitude);
+                    intent.putExtra("location", beacon.roomName);
+                    getApplicationContext().sendBroadcast(intent);
+                    Log.d("KontaktBLEService", "Sending: " + intent.toString());
                     break;
                 }
             }
@@ -204,7 +205,7 @@ public class BLEService extends Service {
         return new SimpleIBeaconListener() {
             @Override
             public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
-                Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
+                //Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
             }
 
             @Override
@@ -212,15 +213,16 @@ public class BLEService extends Service {
                 super.onIBeaconsUpdated(ibeacons, region);
                 setClosestIBeacon(ibeacons);
                 if(ibeacons.size() == 0) {
-                    blePositioningListener.abandonedBLEBuildingZone();
+                    startService(new Intent(getApplicationContext(), GPSService.class));
+                    Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
                 }
-                Log.i("Sample", "IBeacon list: " + ibeacons.size());
+                //Log.i("Sample", "IBeacon list: " + ibeacons.size());
             }
 
             @Override
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
                 super.onIBeaconLost(ibeacon, region);
-                Log.i("Sample", "IBeacon lost: " + ibeacon.toString());
+                //Log.i("Sample", "IBeacon lost: " + ibeacon.toString());
             }
         };
     }
@@ -230,15 +232,15 @@ public class BLEService extends Service {
             @Override
             public void onRegionEntered(IBeaconRegion region) {
                 super.onRegionEntered(region);
-                blePositioningListener.enteredBLEBuildingZone();
-                Log.i("Sample", "Region entered");
+                stopService(new Intent(getApplicationContext(), GPSService.class));
+                Log.i("LocationUpdater", "BLE region entered, stopping GPS service.");
             }
 
             @Override
             public void onRegionAbandoned(IBeaconRegion region) {
                 super.onRegionAbandoned(region);
-                blePositioningListener.abandonedBLEBuildingZone();
-                Log.i("Sample", "Region ababa");
+                startService(new Intent(getApplicationContext(), GPSService.class));
+                Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
             }
         };
     }

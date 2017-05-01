@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.androidpositioningproject.pojos;
+package uci.mmmi.sdu.dk.contextawarenessproject.pojos;
 
 /**
  * Created by peter on 4/25/16.

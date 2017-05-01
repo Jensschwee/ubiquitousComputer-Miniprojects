@@ -1,0 +1,27 @@
+﻿@using Frontend.Model
+@model  List<Frontend.Model.BoardInOut>
+
+<title>ViewData.title</title>
+
+@if (Model != null)
+{
+    <div>
+        @foreach (BoardInOut board in Model)
+        {
+            <div class="card-block">
+                @if (board.status == "IN")
+                {
+
+                }
+                else if (board.status == "OUT")
+                {
+
+                }
+                @board.username
+                @board.location
+                @board.lastSeen
+            </div>
+        }
+    </div>
+
+}

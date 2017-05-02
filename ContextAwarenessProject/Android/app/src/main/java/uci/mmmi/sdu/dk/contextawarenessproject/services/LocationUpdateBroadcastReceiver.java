@@ -29,8 +29,13 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
         String location = intent.getStringExtra("location");
         String roomId = intent.getStringExtra("roomId");
 
+        DeviceStatus status = null;
+        switch (provider) {
+            case "KontaktBLE":
+        }
+
         // Send location update to backend.
-        DeviceStatus status = new DeviceStatus(UUID.randomUUID(), "testy test", DeviceStatus.Status.IN, "Studiezone", "ELELELE");
+        DeviceStatus status = new DeviceStatus(UUID.randomUUID(), , DeviceStatus.Status.valueOf(), location, "ELELELE");
         NetworkManager.getInstance(context).getUbicomService().sendDeviceStatus(status.deviceId.toString(), status).enqueue(new Callback<DeviceStatus>() {
             @Override
             public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {

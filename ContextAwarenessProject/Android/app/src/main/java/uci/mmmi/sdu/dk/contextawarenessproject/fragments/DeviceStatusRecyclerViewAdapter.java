@@ -1,5 +1,9 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.fragments;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +26,14 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
 
     private final List<DeviceStatus> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private final Context context;
+    private Drawable drawable;
 
-    public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener) {
+
+    public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
+        this.context = context;
     }
 
     @Override
@@ -41,10 +49,14 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         holder.mUsername.setText(mValues.get(position).username);
         holder.mLocation.setText(mValues.get(position).location);
         holder.mdistance.setText("20");
+
+        drawable = context.getResources().getDrawable(R.drawable.dot);
         if(mValues.get(position).status == DeviceStatus.Status.IN)
-            //holder.mStatus.setImageBitmap();
-        //else
-            //holder.mStatus.setImageBitmap();
+            drawable.mutate().setColorFilter(Color.parseColor("#00ff00"), PorterDuff.Mode.SRC_IN);
+        else
+            drawable.mutate().setColorFilter(Color.parseColor("#ff0000"), PorterDuff.Mode.SRC_IN);
+
+        holder.mStatus.setImageDrawable(drawable);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

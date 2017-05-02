@@ -59,6 +59,12 @@
             android:name=".services.KontaktBLEService"
             android:enabled="true"
             android:exported="true"></service>
+
+        <receiver android:name=".services.LocationUpdateBroadcastReceiver">
+            <intent-filter>
+                <action android:name="locationupdated" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

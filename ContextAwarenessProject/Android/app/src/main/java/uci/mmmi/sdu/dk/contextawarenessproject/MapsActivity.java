@@ -27,12 +27,11 @@ import java.util.ArrayList;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
-
-    public static final String LOCATION_UPDATED = "locationupdated";
 
     private GoogleMap mMap;
     private TextView latText, longText, sensorText;
@@ -54,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        // This is for updating stuff in the UI. Location is sent to the server via LocationUpdateBroadcastReceiver.
         locationUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -69,22 +68,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 positioningChanged(provider, lat, lng, location, roomId);
             }
         };
-        registerReceiver(locationUpdatedReceiver, new IntentFilter(LOCATION_UPDATED)); // TODO: It complains over a leaked receiver when quitting the app. Make a separate BroadcastReceiver.
-
+        registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
         // TODO: Generate and save UUID in SharedPreferences.
-        /*DeviceStatus s = new DeviceStatus(UUID.randomUUID(), "U165", DeviceStatus.Status.IN, "testy test");
-        NetworkManager.getInstance(this).getUbicomService().sendDeviceStatus(s.deviceId.toString(), s).enqueue(new Callback<DeviceStatus>() {
-            @Override
-            public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<DeviceStatus> call, Throwable t) {
-
-            }
-        });*/
     }
+
+
 
     /**
      * Makes sure that all of our permission requests have been handled
@@ -138,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(locationUpdatedReceiver);
     }
 
     /**

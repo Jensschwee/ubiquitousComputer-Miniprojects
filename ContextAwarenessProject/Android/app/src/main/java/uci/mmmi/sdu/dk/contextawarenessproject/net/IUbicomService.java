@@ -13,9 +13,9 @@ import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
  * Created by peter on 28-04-17.
  */
 public interface IUbicomService {
-    @POST("board/device/{deviceId}/")
+    @POST("board/device/{deviceId}")
     Call<DeviceStatus> sendDeviceStatus(@Path("deviceId") String deviceId, @Body DeviceStatus status);
 
-    @GET("board/data/")
+    @GET("board/data")
     Call<List<DeviceStatus>> getAllDeviceStatuses();
 }

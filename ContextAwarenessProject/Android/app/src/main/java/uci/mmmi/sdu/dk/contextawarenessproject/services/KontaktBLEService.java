@@ -96,6 +96,8 @@ public class KontaktBLEService extends Service {
         ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
 
         enableBLE();
+
+        Log.d("KontaktBLEService", "Created");
     }
 
     @Override
@@ -113,6 +115,8 @@ public class KontaktBLEService extends Service {
     public void onDestroy() {
         proximityManager.disconnect();
         proximityManager = null;
+
+        Log.d("KontaktBLEService", "Destroyed");
         super.onDestroy();
     }
 
@@ -133,14 +137,18 @@ public class KontaktBLEService extends Service {
 
     private void startScanning() {
         if(!proximityManager.isConnected()) {
+            System.out.println("SCAN CONNECT");
             proximityManager.connect(new OnServiceReadyListener() {
                 @Override
                 public void onServiceReady() {
                     proximityManager.startScanning();
+                    System.out.println("SCAN");
                 }
             });
         }
         else {
+
+            System.out.println("SCAN RESTART");
             proximityManager.restartScanning();
         }
     }
@@ -174,7 +182,7 @@ public class KontaktBLEService extends Service {
                 if(beacon.alias.equals(device.getUniqueId())) {
                     LatLng latLng = findRoomPosition(beacon);
 
-                    Intent intent = new Intent(MapsActivity.LOCATION_UPDATED);
+                    Intent intent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
                     intent.putExtra("provider", "KontaktBLE");
                     intent.putExtra("lat", latLng.latitude);
                     intent.putExtra("lng", latLng.longitude);
@@ -206,7 +214,7 @@ public class KontaktBLEService extends Service {
         return new SimpleIBeaconListener() {
             @Override
             public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
-                //Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
+                Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
             }
 
             @Override
@@ -214,16 +222,17 @@ public class KontaktBLEService extends Service {
                 super.onIBeaconsUpdated(ibeacons, region);
                 setClosestIBeacon(ibeacons);
                 if(ibeacons.size() == 0) {
+                    System.out.println(ibeacons.size());
                     startService(new Intent(getApplicationContext(), GPSService.class));
                     Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
                 }
-                //Log.i("Sample", "IBeacon list: " + ibeacons.size());
+                Log.i("Sample", "IBeacon list: " + ibeacons.size());
             }
 
             @Override
             public void onIBeaconLost(IBeaconDevice ibeacon, IBeaconRegion region) {
                 super.onIBeaconLost(ibeacon, region);
-                //Log.i("Sample", "IBeacon lost: " + ibeacon.toString());
+                Log.i("Sample", "IBeacon lost: " + ibeacon.toString());
             }
         };
     }

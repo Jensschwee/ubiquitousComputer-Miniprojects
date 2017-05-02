@@ -4,10 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-/**
- * Created by bullari on 5/2/17.
- */
-
 public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
 
 

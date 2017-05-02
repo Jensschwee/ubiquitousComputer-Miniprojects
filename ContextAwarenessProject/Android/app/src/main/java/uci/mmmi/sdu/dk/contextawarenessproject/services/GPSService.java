@@ -149,7 +149,7 @@ public class GPSService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Intent intent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
-        intent.putExtra("provider", location.getProvider());
+        intent.putExtra("provider", "GPS/Network");
         intent.putExtra("lat", location.getLatitude());
         intent.putExtra("lng", location.getLongitude());
         intent.putExtra("location", "Outside OU44");

@@ -1,5 +1,6 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
+import android.bluetooth.BluetoothClass;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,13 +30,20 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
         String location = intent.getStringExtra("location");
         String roomId = intent.getStringExtra("roomId");
 
-        DeviceStatus status = null;
+        DeviceStatus.Status boardstatus = null;
         switch (provider) {
             case "KontaktBLE":
+                boardstatus = DeviceStatus.Status.IN;
+                break;
+
+            case "GPS/Network":
+                boardstatus = DeviceStatus.Status.OUT;
+                break;
+
         }
 
-        // Send location update to backend.
-        DeviceStatus status = new DeviceStatus(UUID.randomUUID(), , DeviceStatus.Status.valueOf(), location, "ELELELE");
+        // Send location update to backend. TODO UUID + username
+        DeviceStatus status = new DeviceStatus(UUID.randomUUID(), "test", boardstatus, location, roomId);
         NetworkManager.getInstance(context).getUbicomService().sendDeviceStatus(status.deviceId.toString(), status).enqueue(new Callback<DeviceStatus>() {
             @Override
             public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {
@@ -49,3 +57,4 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
         });
     }
 }
+g

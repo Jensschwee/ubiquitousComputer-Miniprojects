@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import java.util.ArrayList;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.common.AbstractHostActivity;
+import uci.mmmi.sdu.dk.contextawarenessproject.fragments.MainFragment;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AbstractHostActivity {
             startService(new Intent(this, KontaktBLEService.class));
             startService(new Intent(this, GPSService.class));
         }
+
+        addFragment(new MainFragment());
     }
 
     @Override

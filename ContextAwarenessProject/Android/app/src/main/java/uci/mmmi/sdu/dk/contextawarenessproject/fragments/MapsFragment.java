@@ -31,12 +31,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
 
     public static final String LOCATION_UPDATED = "locationupdated";
 
-    private MapsViewPagerAdapter mapsViewPagerAdapter;
-    private ViewPager mapsViewPager;
-
     private GoogleMap mMap;
     private TextView latText, longText, sensorText;
-    private BroadcastReceiver locationUpdatedReceiver;
 
     public MapsFragment() {
 
@@ -49,10 +45,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         latText = (TextView) rootView.findViewById(R.id.latTextView);
         longText = (TextView) rootView.findViewById(R.id.longTextView);
         sensorText = (TextView) rootView.findViewById(R.id.sensorTextView);
-
-        mapsViewPagerAdapter = new MapsViewPagerAdapter(getChildFragmentManager());
-        mapsViewPager = (ViewPager) rootView.findViewById(R.id.fragment_maps_viewpager);
-        mapsViewPager.setAdapter(mapsViewPagerAdapter);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

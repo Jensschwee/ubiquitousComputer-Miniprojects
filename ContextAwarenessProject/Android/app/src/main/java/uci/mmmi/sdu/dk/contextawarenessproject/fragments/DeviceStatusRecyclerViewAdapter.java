@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
@@ -37,8 +38,13 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).username);
-        holder.mContentView.setText(mValues.get(position).location);
+        holder.mUsername.setText(mValues.get(position).username);
+        holder.mLocation.setText(mValues.get(position).location);
+        holder.mdistance.setText("20");
+        if(mValues.get(position).status == DeviceStatus.Status.IN)
+            //holder.mStatus.setImageBitmap();
+        //else
+            //holder.mStatus.setImageBitmap();
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,23 +62,26 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     public int getItemCount() {
         return mValues.size();
     }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mUsername;
+        public final ImageView mStatus;
+        public final TextView mLocation;
+        public final TextView mdistance;
+
         public DeviceStatus mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mStatus = (ImageView) view.findViewById(R.id.status);
+            mUsername = (TextView) view.findViewById(R.id.id);
+            mLocation = (TextView) view.findViewById(R.id.location);
+            mdistance = (TextView) view.findViewById(R.id.distance);
         }
-
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mUsername.getText() + "'";
         }
     }
 }

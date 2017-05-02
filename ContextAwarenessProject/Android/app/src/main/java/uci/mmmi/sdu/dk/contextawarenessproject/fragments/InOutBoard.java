@@ -7,11 +7,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.common.BaseFragment;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class InOutBoard extends Fragment {
+public class InOutBoard extends BaseFragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -46,6 +48,30 @@ public class InOutBoard extends Fragment {
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public String getTagText() {
+        return null;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
+    @Override
+    public Integer getMenuResId() {
+        return null;
+    }
+
+    @Override
+    public String getTitle() {
+        return "In-Out Board";
+    }
+
+    @Override
+    public void onOptionsMenuCreated(Menu menu) {
     }
 
     @Override

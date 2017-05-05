@@ -91,7 +91,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //unregisterReceiver(locationUpdatedReceiver);
+        getActivity().unregisterReceiver(locationUpdatedReceiver);
     }
 
     @Override

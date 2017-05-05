@@ -15,9 +15,11 @@ import com.kontakt.sdk.android.ble.configuration.ScanMode;
 import com.kontakt.sdk.android.ble.configuration.ScanPeriod;
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
 import com.kontakt.sdk.android.ble.device.BeaconRegion;
+import com.kontakt.sdk.android.ble.exception.ScanError;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
 import com.kontakt.sdk.android.ble.manager.ProximityManagerFactory;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
+import com.kontakt.sdk.android.ble.manager.listeners.ScanStatusListener;
 import com.kontakt.sdk.android.ble.manager.listeners.SpaceListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleIBeaconListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleSpaceListener;
@@ -44,7 +46,7 @@ import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44GeoJSONDoc;
  * Created by peter on 17-03-17.
  */
 
-public class KontaktBLEService extends Service {
+public class KontaktBLEService extends Service implements ScanStatusListener {
 
     public static final int SCAN_INTERVAL = 5001; // milliseconds
     public static final int SCAN_TIME = 5000; // milliseconds
@@ -140,7 +142,6 @@ public class KontaktBLEService extends Service {
                 @Override
                 public void onServiceReady() {
                     proximityManager.startScanning();
-                    System.out.println("SCAN");
                 }
             });
         }
@@ -252,5 +253,31 @@ public class KontaktBLEService extends Service {
                 Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
             }
         };
+    }
+
+    @Override
+    public void onScanStart() {
+        Log.d("KontaktBLEService", "Starting scanning.");
+    }
+
+    @Override
+    public void onScanStop() {
+        Log.d("KontaktBLEService", "Stopping scanning.");
+    }
+
+    @Override
+    public void onScanError(ScanError scanError) {
+        Log.d("KontaktBLEService", "Scanning error.");
+        Log.e("KontaktBLEService", scanError.getMessage());
+    }
+
+    @Override
+    public void onMonitoringCycleStart() {
+        Log.d("KontaktBLEService", "Cycle start.");
+    }
+
+    @Override
+    public void onMonitoringCycleStop() {
+        Log.d("KontaktBLEService", "Cycle stop.");
     }
 }

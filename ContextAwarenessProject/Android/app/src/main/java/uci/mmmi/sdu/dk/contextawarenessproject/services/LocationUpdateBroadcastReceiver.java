@@ -3,6 +3,7 @@ package uci.mmmi.sdu.dk.contextawarenessproject.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 import java.util.UUID;
 
@@ -40,8 +41,10 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
 
         }
 
-        // Send location update to backend. TODO UUID + username
-        DeviceStatus status = new DeviceStatus(UUID.randomUUID(), "test", boardstatus, location, roomId);
+        String uuid = PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", "");
+
+        // Send location update to backend.
+        DeviceStatus status = new DeviceStatus(UUID.fromString(uuid), "test", boardstatus, location, roomId);
         NetworkManager.getInstance(context).getUbicomService().sendDeviceStatus(status.deviceId.toString(), status).enqueue(new Callback<DeviceStatus>() {
             @Override
             public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {

@@ -7,10 +7,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,19 +22,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
-import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
-import uci.mmmi.sdu.dk.contextawarenessproject.common.BaseFragment;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 
-public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks{
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks{
 
     public static final String LOCATION_UPDATED = "locationupdated";
-
-    private MapsViewPagerAdapter mapsViewPagerAdapter;
-    private ViewPager mapsViewPager;
 
     private GoogleMap mMap;
     private TextView latText, longText, sensorText;
     private BroadcastReceiver locationUpdatedReceiver;
+
 
     public MapsFragment() {
 
@@ -50,45 +45,34 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         longText = (TextView) rootView.findViewById(R.id.longTextView);
         sensorText = (TextView) rootView.findViewById(R.id.sensorTextView);
 
-        mapsViewPagerAdapter = new MapsViewPagerAdapter(getChildFragmentManager());
-        mapsViewPager = (ViewPager) rootView.findViewById(R.id.fragment_maps_viewpager);
-        mapsViewPager.setAdapter(mapsViewPagerAdapter);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
 
         return rootView;
     }
 
     @Override
-    public String getTagText() {
-        return "Maps Fragment";
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
-    }
-
-    @Override
-    public Integer getMenuResId() {
-        return null;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Maps Fragment";
-    }
-
-    @Override
-    public void onOptionsMenuCreated(Menu menu) {
-
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // This is for updating stuff in the UI. Location is sent to the server via LocationUpdateBroadcastReceiver.
+//        locationUpdatedReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                String provider = intent.getStringExtra("provider");
+//                double lat = intent.getDoubleExtra("lat", 0);
+//                double lng = intent.getDoubleExtra("lng", 0);
+//                String location = intent.getStringExtra("location");
+//                String roomId = intent.getStringExtra("roomId");
+//
+//                Log.d("Location Updated", provider + ": " + location);
+//
+//                positioningChanged(provider, lat, lng, location, roomId);
+//            }
+//        };
+//        registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
+//        // TODO: Generate and save UUID in SharedPreferences.
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -102,6 +86,12 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //unregisterReceiver(locationUpdatedReceiver);
     }
 
     @Override

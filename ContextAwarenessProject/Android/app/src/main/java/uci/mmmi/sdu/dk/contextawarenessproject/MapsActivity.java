@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
+
+import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
@@ -40,10 +42,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(handlePermissions() ) {
+        //if(handlePermissions() ) {
             startService(new Intent(this, KontaktBLEService.class));
             startService(new Intent(this, GPSService.class));
-        }
+        //}
 
         setContentView(R.layout.activity_maps);
         latText = (TextView) findViewById(R.id.latTextView);
@@ -118,8 +120,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 allowed.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 allowed.contains(Manifest.permission.BLUETOOTH) &&
                 allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
-            startService(new Intent(this, KontaktBLEService.class));
-            startService(new Intent(this, GPSService.class));
+            //startService(new Intent(this, KontaktBLEService.class));
+            //startService(new Intent(this, GPSService.class));
         }
     }
 

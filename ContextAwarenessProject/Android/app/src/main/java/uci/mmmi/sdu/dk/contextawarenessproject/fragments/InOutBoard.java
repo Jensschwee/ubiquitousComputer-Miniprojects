@@ -98,6 +98,7 @@ public class InOutBoard extends BaseFragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new DeviceStatusRecyclerViewAdapter(deviceStatuses, mListener,context));
+            //recyclerView.setAdapter(new DeviceStatusRecyclerViewAdapter(deviceStatuses, mListener));
         }
         return view;
     }

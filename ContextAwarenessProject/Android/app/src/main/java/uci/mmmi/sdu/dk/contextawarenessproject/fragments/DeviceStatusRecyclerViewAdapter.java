@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
+import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceLocation;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
 import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoard.OnListFragmentInteractionListener;
 
@@ -36,6 +38,35 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         this.context = context;
     }
 
+    public void calculateDistance()
+    {
+        String floor = "1";
+        for (DeviceStatus device:mValues) {
+            DeviceLocation deviceLocation = findLocation(device);
+            if(deviceLocation.floor.equals(floor)) {
+                Location me = new Location("");
+                Location dest = new Location("");
+
+                //me.setLatitude(myLat);
+                //me.setLongitude(myLong);
+
+                dest.setLatitude(deviceLocation.lat);
+                dest.setLongitude(deviceLocation.lng);
+
+                float dist = me.distanceTo(dest);
+                device.distance = String.valueOf(Math.round(dist));
+            }
+            else
+                device.distance = deviceLocation.floor;
+        }
+    }
+
+    public DeviceLocation findLocation(DeviceStatus device)
+    {
+
+        return null;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -48,7 +79,7 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         holder.mItem = mValues.get(position);
         holder.mUsername.setText(mValues.get(position).username);
         holder.mLocation.setText(mValues.get(position).location);
-        holder.mdistance.setText("20");
+        holder.mdistance.setText(mValues.get(position).distance);
 
         drawable = context.getResources().getDrawable(R.drawable.dot);
         if(mValues.get(position).status == DeviceStatus.Status.IN)

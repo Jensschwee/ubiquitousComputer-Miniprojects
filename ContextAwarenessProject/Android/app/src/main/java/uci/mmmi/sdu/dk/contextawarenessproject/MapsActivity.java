@@ -25,7 +25,6 @@ import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 
 public class MapsActivity extends FragmentActivity {
 
-
     private MapsViewPagerAdapter mapsViewPagerAdapter;
     private ViewPager mapsViewPager;
 

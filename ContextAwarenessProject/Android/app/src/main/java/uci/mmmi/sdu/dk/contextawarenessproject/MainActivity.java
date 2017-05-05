@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
 
         if(handlePermissions() ) {
             startService(new Intent(this, KontaktBLEService.class));
-            startService(new Intent(this, GPSService.class));
+            //startService(new Intent(this, GPSService.class));
         }
     }
 
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
                 allowed.contains(Manifest.permission.BLUETOOTH) &&
                 allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
             startService(new Intent(this, KontaktBLEService.class));
-            startService(new Intent(this, GPSService.class));
+            //startService(new Intent(this, GPSService.class));
         }
     }
 }

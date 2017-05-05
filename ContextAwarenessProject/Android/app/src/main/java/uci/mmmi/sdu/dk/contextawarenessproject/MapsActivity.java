@@ -2,6 +2,7 @@ package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
@@ -36,6 +38,13 @@ public class MapsActivity extends FragmentActivity {
         //}
 
         setContentView(R.layout.activity_maps);
+
+
+        if(!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();
+        }
+        String uuid = PreferenceManager.getDefaultSharedPreferences(this).getString("deviceUUID", "");
+
 
         mapsViewPagerAdapter = new MapsViewPagerAdapter(getSupportFragmentManager());
         mapsViewPager = (ViewPager) findViewById(R.id.fragment_maps_viewpager);

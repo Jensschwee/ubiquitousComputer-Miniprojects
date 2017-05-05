@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
@@ -71,7 +73,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
         registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
-        // TODO: Generate and save UUID in SharedPreferences.
+
+        if(!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();
+        }
+
+
+        String uuid = PreferenceManager.getDefaultSharedPreferences(this).getString("deviceUUID", "");
     }
 
 

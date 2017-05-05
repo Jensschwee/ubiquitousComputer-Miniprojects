@@ -24,6 +24,7 @@ import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoard.OnListFragme
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.Beacons;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Feature;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Location;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44LocatonRoot;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -45,7 +46,7 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     private final Context context;
     private Drawable drawable;
     private DeviceLocation localPhoneLocation;
-    private LinkedList<OU44Location> locations;
+    private OU44LocatonRoot locations;
     private LinkedList<Beacons.beaconData> JSONbeacons;
 
     public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener, Context context) {
@@ -56,8 +57,7 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         InputStream inStream = context.getResources().openRawResource(R.raw.all_rooms_sdu);
         Reader rd = new BufferedReader(new InputStreamReader(inStream));
         Gson gson = new Gson();
-        OU44Location obj = gson.fromJson(rd, OU44Location.class);
-        locations = new LinkedList<>(Arrays.asList(obj));
+        locations = gson.fromJson(rd, OU44LocatonRoot.class);
 
         String deviceId =  PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", null);
         DeviceStatus deviceStatus = findLocalPhone(deviceId);
@@ -100,7 +100,7 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
 
     public DeviceLocation findLocation(DeviceStatus device)
     {
-        for(OU44Location l : locations) {
+        for(OU44Location l : locations.locations) {
 
             if(device.roomId.equals(l.getProperties().getRoomId())) {
                 DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));

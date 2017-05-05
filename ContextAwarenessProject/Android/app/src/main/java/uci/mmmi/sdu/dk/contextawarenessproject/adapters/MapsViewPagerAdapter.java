@@ -11,13 +11,13 @@ public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
 
 
     private Fragment settingsFragment;
-    //private Fragment inNOutFragment;
+    private Fragment inNOutFragment;
     private Fragment mapsFragment;
 
     public MapsViewPagerAdapter(FragmentManager fm) {
         super(fm);
         settingsFragment = new SettingsFragment();
-        //inNOutFragment = new Fragment();
+        inNOutFragment = new Fragment();
         mapsFragment = new MapsFragment();
     }
 
@@ -25,30 +25,29 @@ public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return settingsFragment;
+                return inNOutFragment;
             case 1:
                 return mapsFragment;
-            //case 2:
-            //    return inNOutFragment;
+            case 2:
+                return settingsFragment;
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        //return 3;
-        return 2;
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Settings";
-            //case 0:
-            //    return "In and Out Board";
+                return "In and Out Board";
             case 1:
                 return "Your position";
+            case 2:
+                return "Settings";
         }
         return super.getPageTitle(position);
     }

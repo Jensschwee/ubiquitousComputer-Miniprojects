@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import java.util.UUID;
 import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
-import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 
 import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 
@@ -43,7 +43,6 @@ public class MapsActivity extends FragmentActivity {
         if(!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();
         }
-        String uuid = PreferenceManager.getDefaultSharedPreferences(this).getString("deviceUUID", "");
 
 
         mapsViewPagerAdapter = new MapsViewPagerAdapter(getSupportFragmentManager());

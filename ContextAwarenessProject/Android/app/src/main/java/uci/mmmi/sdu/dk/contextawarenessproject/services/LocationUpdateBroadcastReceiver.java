@@ -1,11 +1,9 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
-import android.bluetooth.BluetoothClass;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -57,4 +55,3 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
         });
     }
 }
-g

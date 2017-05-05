@@ -49,8 +49,6 @@ public class KontaktBLEService extends Service {
     public static final int SCAN_INTERVAL = 5001; // milliseconds
     public static final int SCAN_TIME = 5000; // milliseconds
 
-    private Context context;
-
     private ProximityManager proximityManager;
     private IBeaconRegion beaconRegion = BeaconRegion.builder().identifier("lala").proximity(UUID.fromString("f7826da6-4fa2-4e98-8024-bc5b71e0893e")).build();
 
@@ -81,33 +79,31 @@ public class KontaktBLEService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        context = getApplicationContext();
-
-        InputStream inStream = context.getResources().openRawResource(R.raw.beacons);
-        Reader rd = new BufferedReader(new InputStreamReader(inStream));
-        Gson gson = new Gson();
-        Beacons obj = gson.fromJson(rd, Beacons.class);
-        JSONbeacons = new LinkedList<>(Arrays.asList(obj.beacons));
-
-        InputStream inStream2 = context.getResources().openRawResource(R.raw.ou44_geometry);
-        Reader rd2 = new BufferedReader(new InputStreamReader(inStream2));
-        Gson gson2 = new Gson();
-        ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
-
-        enableBLE();
-
         Log.d("KontaktBLEService", "Created");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        InputStream inStream = getBaseContext().getResources().openRawResource(R.raw.beacons);
+        Reader rd = new BufferedReader(new InputStreamReader(inStream));
+        Gson gson = new Gson();
+        Beacons obj = gson.fromJson(rd, Beacons.class);
+        JSONbeacons = new LinkedList<>(Arrays.asList(obj.beacons));
+
+        InputStream inStream2 = getBaseContext().getResources().openRawResource(R.raw.ou44_geometry);
+        Reader rd2 = new BufferedReader(new InputStreamReader(inStream2));
+        Gson gson2 = new Gson();
+        ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
+
+        enableBLE();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean stopService(Intent name) {
         proximityManager.stopScanning();
+
+        Log.d("KontaktBLEService", "Stopping");
         return super.stopService(name);
     }
 
@@ -124,7 +120,7 @@ public class KontaktBLEService extends Service {
         // Setup of the Kontakt.io API inspired by:
         // https://github.com/kontaktio/kontakt-beacon-admin-sample-app/blob/master/sample-app/src/main/java/com/kontakt/sample/samples/ScanRegionsActivity.java
         KontaktSDK.initialize("YOUR_API_KEY");
-        proximityManager = ProximityManagerFactory.create(context);
+        proximityManager = ProximityManagerFactory.create(getBaseContext());
         proximityManager.configuration()
                 .scanPeriod(ScanPeriod.RANGING)
                 .scanMode(ScanMode.BALANCED)
@@ -154,6 +150,7 @@ public class KontaktBLEService extends Service {
     }
 
     private void stopScanning() {
+        Log.d("KontaktBLEService", "Stop scanning");
         proximityManager.stopScanning();
     }
 

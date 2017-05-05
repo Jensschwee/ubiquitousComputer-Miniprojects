@@ -136,7 +136,7 @@ public class GPSService extends Service implements LocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
+        mContext = getBaseContext();
         startUsingGps();
     }
 

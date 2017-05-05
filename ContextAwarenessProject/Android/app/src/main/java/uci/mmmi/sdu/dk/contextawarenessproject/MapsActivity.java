@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -38,7 +39,6 @@ public class MapsActivity extends FragmentActivity {
         //}
 
         setContentView(R.layout.activity_maps);
-
 
         if(!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();

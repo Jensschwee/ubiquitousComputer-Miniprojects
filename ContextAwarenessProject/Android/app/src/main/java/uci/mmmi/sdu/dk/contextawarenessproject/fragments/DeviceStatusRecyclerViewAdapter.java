@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,9 +44,9 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
     private Drawable drawable;
+    private DeviceLocation localPhoneLocation;
     private LinkedList<OU44Location> locations;
-
-
+    private LinkedList<Beacons.beaconData> JSONbeacons;
 
     public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
@@ -57,19 +58,23 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         Gson gson = new Gson();
         OU44Location obj = gson.fromJson(rd, OU44Location.class);
         locations = new LinkedList<>(Arrays.asList(obj));
+
+        String deviceId =  PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", null);
+        DeviceStatus deviceStatus = findLocalPhone(deviceId);
+        localPhoneLocation = findLocation(deviceStatus);
+        mValues.remove(localPhoneLocation);
     }
 
     public void calculateDistance()
     {
-        String floor = "1";
         for (DeviceStatus device:mValues) {
             DeviceLocation deviceLocation = findLocation(device);
-            if(deviceLocation.floor.equals(floor)) {
+            if(deviceLocation.floor.equals(localPhoneLocation.floor)) {
                 Location me = new Location("");
                 Location dest = new Location("");
 
-                //me.setLatitude(myLat);
-                //me.setLongitude(myLong);
+                me.setLatitude(localPhoneLocation.lat);
+                me.setLongitude(localPhoneLocation.lng);
 
                 dest.setLatitude(deviceLocation.lat);
                 dest.setLongitude(deviceLocation.lng);
@@ -80,6 +85,17 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
             else
                 device.distance = deviceLocation.floor;
         }
+    }
+
+    public DeviceStatus findLocalPhone(String deviceId)
+    {
+        for(DeviceStatus device : mValues) {
+            if(device.deviceId.equals(deviceId))
+            {
+                return device;
+            }
+        }
+        return null;
     }
 
     public DeviceLocation findLocation(DeviceStatus device)

@@ -36,6 +36,7 @@ public class InOutBoard extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public InOutBoard() {
+
     }
 
     // TODO: Customize parameter initialization

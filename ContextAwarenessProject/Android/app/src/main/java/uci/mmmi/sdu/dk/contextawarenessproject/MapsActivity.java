@@ -2,7 +2,6 @@ package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -15,15 +14,16 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
+import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoard;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
-
 import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements InOutBoard.OnListFragmentInteractionListener{
 
     private MapsViewPagerAdapter mapsViewPagerAdapter;
     private ViewPager mapsViewPager;
@@ -109,6 +109,11 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onListFragmentInteraction(DeviceStatus item) {
+
     }
 
 //    /**

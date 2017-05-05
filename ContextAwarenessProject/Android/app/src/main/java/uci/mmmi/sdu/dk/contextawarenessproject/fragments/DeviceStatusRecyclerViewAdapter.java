@@ -12,11 +12,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.Gson;
+
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceLocation;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
 import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoard.OnListFragmentInteractionListener;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.Beacons;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Feature;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Location;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,12 +43,20 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
     private Drawable drawable;
+    private LinkedList<OU44Location> locations;
+
 
 
     public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
         this.context = context;
+
+        InputStream inStream = context.getResources().openRawResource(R.raw.all_rooms_sdu);
+        Reader rd = new BufferedReader(new InputStreamReader(inStream));
+        Gson gson = new Gson();
+        OU44Location obj = gson.fromJson(rd, OU44Location.class);
+        locations = new LinkedList<>(Arrays.asList(obj));
     }
 
     public void calculateDistance()
@@ -63,7 +84,13 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
 
     public DeviceLocation findLocation(DeviceStatus device)
     {
+        for(OU44Location l : locations) {
 
+            if(device.roomId.equals(l.getProperties().getRoomId())) {
+                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
+                return deviceLocation;
+            }
+        }
         return null;
     }
 

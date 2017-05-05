@@ -6,10 +6,10 @@ package uci.mmmi.sdu.dk.contextawarenessproject.entities;
 
 public class DeviceLocation {
     public String floor;
-    public float lat;
-    public float lng;
+    public Double lat;
+    public Double lng;
 
-    public DeviceLocation(String floor, float lat, float lng) {
+    public DeviceLocation(String floor, Double lat, Double lng) {
         this.lat = lat;
         this.floor = floor;
         this.lng = lng;

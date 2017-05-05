@@ -2,15 +2,16 @@ package uci.mmmi.sdu.dk.contextawarenessproject.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import uci.mmmi.sdu.dk.contextawarenessproject.common.BaseFragment;
+import uci.mmmi.sdu.dk.contextawarenessproject.R;
 
-public class SettingsFragment extends BaseFragment {
+public class SettingsFragment extends Fragment {
+
+    private TextView hello;
 
     public SettingsFragment() {
 
@@ -18,32 +19,9 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public String getTagText() {
-        return "Settings Fragment";
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
-    }
-
-    @Override
-    public Integer getMenuResId() {
-        return null;
-    }
-
-    @Override
-    public String getTitle() {
-        return "Settings";
-    }
-
-    @Override
-    public void onOptionsMenuCreated(Menu menu) {
-
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        hello = (TextView) rootView.findViewById(R.id.fragment_settings_text);
+        return rootView;
     }
 
     @Override

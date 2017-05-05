@@ -1,6 +1,7 @@
 package uci.mmmi.sdu.dk.contextawarenessproject;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,12 +11,11 @@ import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 
-import uci.mmmi.sdu.dk.contextawarenessproject.common.AbstractHostActivity;
-import uci.mmmi.sdu.dk.contextawarenessproject.fragments.MainFragment;
+import uci.mmmi.sdu.dk.contextawarenessproject.fragments.SettingsFragment;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.KontaktBLEService;
 
-public class MainActivity extends AbstractHostActivity {
+public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,20 +26,14 @@ public class MainActivity extends AbstractHostActivity {
             startService(new Intent(this, KontaktBLEService.class));
             startService(new Intent(this, GPSService.class));
         }
-
-        addFragment(new MainFragment());
     }
+
 
     @Override
-    protected int getBaseFragmentFrameResource() {
-        return R.id.activity_main_basefragmentframe;
+    public void onStart() {
+        super.onStart();
     }
 
-    @Nullable
-    @Override
-    protected Integer getActionbarIconResource() {
-        return null;
-    }
 
     /**
      * Makes sure that all of our permission requests have been handled

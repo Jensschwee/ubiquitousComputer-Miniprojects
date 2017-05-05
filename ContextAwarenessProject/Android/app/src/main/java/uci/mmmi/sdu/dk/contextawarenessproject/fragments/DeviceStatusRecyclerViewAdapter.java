@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.Gson;
+
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceLocation;
 import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
 import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoard.OnListFragmentInteractionListener;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.Beacons;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Feature;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Location;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44LocatonRoot;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,25 +45,36 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
     private Drawable drawable;
-
+    private DeviceLocation localPhoneLocation;
+    private OU44LocatonRoot locations;
+    private LinkedList<Beacons.beaconData> JSONbeacons;
 
     public DeviceStatusRecyclerViewAdapter(List<DeviceStatus> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
         this.context = context;
+
+        InputStream inStream = context.getResources().openRawResource(R.raw.all_rooms_sdu);
+        Reader rd = new BufferedReader(new InputStreamReader(inStream));
+        Gson gson = new Gson();
+        locations = gson.fromJson(rd, OU44LocatonRoot.class);
+
+        String deviceId =  PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", null);
+        DeviceStatus deviceStatus = findLocalPhone(deviceId);
+        localPhoneLocation = findLocation(deviceStatus);
+        mValues.remove(localPhoneLocation);
     }
 
     public void calculateDistance()
     {
-        String floor = "1";
         for (DeviceStatus device:mValues) {
             DeviceLocation deviceLocation = findLocation(device);
-            if(deviceLocation.floor.equals(floor)) {
+            if(deviceLocation.floor.equals(localPhoneLocation.floor)) {
                 Location me = new Location("");
                 Location dest = new Location("");
 
-                //me.setLatitude(myLat);
-                //me.setLongitude(myLong);
+                me.setLatitude(localPhoneLocation.lat);
+                me.setLongitude(localPhoneLocation.lng);
 
                 dest.setLatitude(deviceLocation.lat);
                 dest.setLongitude(deviceLocation.lng);
@@ -61,9 +87,26 @@ public class DeviceStatusRecyclerViewAdapter extends RecyclerView.Adapter<Device
         }
     }
 
+    public DeviceStatus findLocalPhone(String deviceId)
+    {
+        for(DeviceStatus device : mValues) {
+            if(device.deviceId.equals(deviceId))
+            {
+                return device;
+            }
+        }
+        return null;
+    }
+
     public DeviceLocation findLocation(DeviceStatus device)
     {
+        for(OU44Location l : locations.locations) {
 
+            if(device.roomId.equals(l.getProperties().getRoomId())) {
+                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
+                return deviceLocation;
+            }
+        }
         return null;
     }
 

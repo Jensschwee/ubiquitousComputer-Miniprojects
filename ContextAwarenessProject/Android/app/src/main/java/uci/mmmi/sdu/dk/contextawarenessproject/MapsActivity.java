@@ -38,7 +38,6 @@ public class MapsActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_maps);
 
-
         if(!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();
         }

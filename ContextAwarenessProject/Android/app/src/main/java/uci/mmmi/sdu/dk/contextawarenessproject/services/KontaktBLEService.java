@@ -95,6 +95,8 @@ public class KontaktBLEService extends Service {
         Gson gson2 = new Gson();
         ou44GeoJSONDoc = gson2.fromJson(rd2, OU44GeoJSONDoc.class);
 
+        Log.d("KontaktBLEService", "Start command");
+
         enableBLE();
         return super.onStartCommand(intent, flags, startId);
     }

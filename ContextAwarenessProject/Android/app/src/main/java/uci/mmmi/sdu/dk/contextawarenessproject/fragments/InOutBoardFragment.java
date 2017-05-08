@@ -230,6 +230,7 @@ public class InOutBoardFragment extends ListFragment {
         ArrayList<DeviceStatus> first = new ArrayList<>();
         ArrayList<DeviceStatus> sameFloor = new ArrayList<>();
         ArrayList<DeviceStatus> out = new ArrayList<>();
+        ArrayList<DeviceStatus> rest = new ArrayList<>();
 
         if (localPhoneLocation.floor != null) {
             for (DeviceStatus device : deviceList) {
@@ -255,14 +256,18 @@ public class InOutBoardFragment extends ListFragment {
                 ground.add(device);
             } else if (device.distance.equals("1. floor")) {
                 first.add(device);
+            } else {
+                rest.add(device);
             }
         }
+
         deviceList.clear();
         if (!sameFloor.isEmpty()) deviceList.addAll(sameFloor);
         if (!parterre.isEmpty()) deviceList.addAll(parterre);
         if (!ground.isEmpty()) deviceList.addAll(ground);
         if (!first.isEmpty()) deviceList.addAll(first);
         if (!out.isEmpty()) deviceList.addAll(out);
+        if (!rest.isEmpty()) deviceList.addAll(rest);
     }
 
     private class DeviceDistanceMeterComparator implements Comparator<DeviceStatus> {

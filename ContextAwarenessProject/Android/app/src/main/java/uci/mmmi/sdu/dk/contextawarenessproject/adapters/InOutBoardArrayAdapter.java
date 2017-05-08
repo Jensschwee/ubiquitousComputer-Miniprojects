@@ -67,7 +67,10 @@ public class InOutBoardArrayAdapter extends ArrayAdapter<InOutBoardListItem> {
                 if (listItem.getStatus().distance.isEmpty()) {
                     holder.distanceTextView.setText("-  ");
                 } else {
-                    holder.distanceTextView.setText(listItem.getStatus().distance + " m");
+                    if (listItem.getStatus().distance.equals("Parterre")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else if (listItem.getStatus().distance.equals("Ground floor")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else if (listItem.getStatus().distance.equals("1. floor")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else holder.distanceTextView.setText(listItem.getStatus().distance + " m");
                 }
             } else if (listItem.getStatus().status == DeviceStatus.Status.OUT){
                 drawable.mutate().setColorFilter(Color.parseColor("#ff0000"), PorterDuff.Mode.SRC_IN);

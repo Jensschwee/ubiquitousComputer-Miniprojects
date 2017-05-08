@@ -99,6 +99,8 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
 
         Log.d("KontaktBLEService", "Start command");
 
+        System.out.println(JSONbeacons.size());
+
         enableBLE();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -132,6 +134,7 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
         proximityManager.spaces().iBeaconRegion(beaconRegion);
         proximityManager.setIBeaconListener(createIBeaconListener());
         proximityManager.setSpaceListener(createSpaceListener());
+        proximityManager.setScanStatusListener(this);
         startScanning();
     }
 

@@ -55,22 +55,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // This is for updating stuff in the UI. Location is sent to the server via LocationUpdateBroadcastReceiver.
-//        locationUpdatedReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                String provider = intent.getStringExtra("provider");
-//                double lat = intent.getDoubleExtra("lat", 0);
-//                double lng = intent.getDoubleExtra("lng", 0);
-//                String location = intent.getStringExtra("location");
-//                String roomId = intent.getStringExtra("roomId");
-//
-//                Log.d("Location Updated", provider + ": " + location);
-//
-//                positioningChanged(provider, lat, lng, location, roomId);
-//            }
-//        };
-//        registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
-//        // TODO: Generate and save UUID in SharedPreferences.
+        locationUpdatedReceiver = new BroadcastReceiver() {
+            @Override
+           public void onReceive(Context context, Intent intent) {
+                String provider = intent.getStringExtra("provider");
+                double lat = intent.getDoubleExtra("lat", 0);
+                double lng = intent.getDoubleExtra("lng", 0);
+                String location = intent.getStringExtra("location");
+                String roomId = intent.getStringExtra("roomId");
+
+                Log.d("Location Updated", provider + ": " + location);
+
+                positioningChanged(provider, lat, lng, location, roomId);
+           }
+        };
+        getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
+        // TODO: Generate and save UUID in SharedPreferences.
     }
 
     @Override
@@ -105,9 +105,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void positioningChanged(String provider, double lat, double lng, String location, String roomId) {
         LatLng currentLocation = new LatLng(lat, lng);
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        if(mMap != null) {
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        }
         latText.setText("" + lat);
         longText.setText("" + lng);
         sensorText.setText(provider);

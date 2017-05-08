@@ -179,6 +179,8 @@ public class InOutBoardFragment extends ListFragment {
 
     public void calculateDistance() {
         for (DeviceStatus device : deviceList) {
+            if(!device.status.equals(DeviceStatus.Status.IN))
+                continue;
             DeviceLocation deviceLocation = findLocation(device);
             System.out.println(deviceLocation);
             System.out.println(deviceLocation.floor);
@@ -195,7 +197,7 @@ public class InOutBoardFragment extends ListFragment {
                 dest.setLongitude(deviceLocation.lng);
 
                 float dist = me.distanceTo(dest);
-                device.distance = String.valueOf(Math.round(dist));
+                device.distance = String.valueOf(Math.round(dist)) + "m";
             }
             else {
                 device.distance = deviceLocation.floor;

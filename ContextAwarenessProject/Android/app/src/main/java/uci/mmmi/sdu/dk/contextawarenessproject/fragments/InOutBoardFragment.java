@@ -62,8 +62,8 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 0.0;
-    private double localLng = 0.0;
+    private double localLat = 0d;
+    private double localLng = 0d;
 
     public InOutBoardFragment() {}
 
@@ -88,8 +88,8 @@ public class InOutBoardFragment extends ListFragment {
         locationUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                localLat = intent.getDoubleExtra("lat", 0.0);
-                localLng = intent.getDoubleExtra("lng", 0.0);
+                localLat = intent.getDoubleExtra("lat", 0d);
+                localLng = intent.getDoubleExtra("lng", 0d);
             }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
@@ -197,8 +197,12 @@ public class InOutBoardFragment extends ListFragment {
                 me.setLatitude(localPhoneLocation.lat);
                 me.setLongitude(localPhoneLocation.lng);
 
+                System.out.println(localPhoneLocation.lat);
+
                 dest.setLatitude(deviceLocation.lat);
                 dest.setLongitude(deviceLocation.lng);
+
+                System.out.println(deviceLocation.lat);
 
                 float dist = me.distanceTo(dest);
                 device.distance = String.valueOf(Math.round(dist));
@@ -286,10 +290,10 @@ public class InOutBoardFragment extends ListFragment {
     }
 
     public DeviceLocation findLocation(DeviceStatus device) {
-        for(OU44Location l : locations) {
-            if (device != null) {
-                if(device.roomId.equals(l.getProperties().getRoomId())) {
-                    DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
+        if (device != null) {
+            for (OU44Location l : locations) {
+                if (device.roomId.equals(l.getProperties().getRoomId())) {
+                    DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(1), l.getGeometry().getCoordinates().get(0));
                     return deviceLocation;
                 }
             }

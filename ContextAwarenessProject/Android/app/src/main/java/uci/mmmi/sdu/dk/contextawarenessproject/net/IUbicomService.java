@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.DeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.RemoteDeviceStatus;
 
 /**
  * Created by peter on 28-04-17.
@@ -17,5 +18,5 @@ public interface IUbicomService {
     Call<DeviceStatus> sendDeviceStatus(@Path("deviceId") String deviceId, @Body DeviceStatus status);
 
     @GET("board/data")
-    Call<List<DeviceStatus>> getAllDeviceStatuses();
+    Call<List<RemoteDeviceStatus>> getAllDeviceStatuses();
 }

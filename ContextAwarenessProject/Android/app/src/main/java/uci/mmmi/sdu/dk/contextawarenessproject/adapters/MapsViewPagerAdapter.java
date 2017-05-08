@@ -27,9 +27,9 @@ public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return inNOutFragment;
-            case 1:
-                return mapsFragment;
             case 2:
+                return mapsFragment;
+            case 1:
                 return settingsFragment;
         }
         return null;
@@ -45,9 +45,9 @@ public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return "In and Out Board";
-            case 1:
-                return "Your position";
             case 2:
+                return "Your position";
+            case 1:
                 return "Settings";
         }
         return super.getPageTitle(position);

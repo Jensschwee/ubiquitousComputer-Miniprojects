@@ -87,10 +87,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         // Middle of the building
                         55.3674083780001,
                         10.4307825390001,
-                        // 100 meters radius
-                        100
+                        // 55 meters radius
+                        55
                 )
-                .setExpirationDuration(120000) // Two minute update-rate.
+                .setExpirationDuration(10000) // Two minute update-rate.
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
 

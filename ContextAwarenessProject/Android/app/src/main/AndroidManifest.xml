@@ -55,7 +55,8 @@
             android:name=".services.KontaktBLEService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".services.GeofenceTransitionService" />
+        <service android:name=".services.GeofenceTransitionService"
+            android:exported="true" />
 
         <receiver android:name=".services.LocationUpdateBroadcastReceiver">
             <intent-filter>

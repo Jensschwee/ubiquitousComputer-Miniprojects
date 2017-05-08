@@ -64,8 +64,8 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 0d;
-    private double localLng = 0d;
+    private double localLat = 5d;
+    private double localLng = 5d;
 
 
     public InOutBoardFragment() {}
@@ -93,6 +93,8 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
+                System.out.println(intent.getDoubleExtra("lat", 0d));
+                System.out.println(intent.getDoubleExtra("lng", 0d));
             }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
@@ -201,7 +203,7 @@ public class InOutBoardFragment extends ListFragment {
                 me.setLatitude(localPhoneLocation.lat);
                 me.setLongitude(localPhoneLocation.lng);
 
-                System.out.println(localPhoneLocation.lat);
+                System.out.println(localLat);
 
                 dest.setLatitude(deviceLocation.lat);
                 dest.setLongitude(deviceLocation.lng);

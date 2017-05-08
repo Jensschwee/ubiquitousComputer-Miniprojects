@@ -80,7 +80,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         geofences.add(geofence);
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
         builder.addGeofences(geofences);
         return builder.build();
     }

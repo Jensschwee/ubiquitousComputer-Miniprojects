@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,18 +20,21 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GeofenceTransitionService;
 
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
 
-public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
+public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status>, LocationListener {
 
     private GoogleApiClient mGoogleApiClient;
     private PendingIntent mGeofencePendingIntent;
@@ -80,6 +84,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private GeofencingRequest getGeofencingRequest() {
         Geofence geofence = new Geofence.Builder()
                 .setRequestId("OU44")
@@ -88,10 +97,11 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         55.3674083780001,
                         10.4307825390001,
                         // 55 meters radius
-                        55
+                        50
                 )
-                .setExpirationDuration(10000) // Two minute update-rate.
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setLoiteringDelay(1)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT | Geofence.GEOFENCE_TRANSITION_DWELL)
                 .build();
 
         ArrayList<Geofence> geofences = new ArrayList<>();
@@ -179,6 +189,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 getGeofencingRequest(),
                 getGeofencePendingIntent()
         ).setResultCallback(this);
+        LocationRequest r = LocationRequest.create();
+        r.setInterval(5000);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, r, getGeofencePendingIntent()).setResultCallback(this);
     }
 
     @Override
@@ -192,10 +205,16 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 mGoogleApiClient,
                 getGeofencePendingIntent()
         ).setResultCallback(this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     @Override
     public void onResult(@NonNull Status status) {
         System.out.println(status.isSuccess());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 }

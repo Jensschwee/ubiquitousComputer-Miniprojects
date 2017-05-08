@@ -35,18 +35,31 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
                 boardstatus = DeviceStatus.Status.IN;
                 break;
 
-            case "GPS/Network":
-                boardstatus = DeviceStatus.Status.OUT;
+            case "Geofencing":
+                if(location.equals("Outside OU44")) {
+                    boardstatus = DeviceStatus.Status.OUT;
+                }
+                else {
+                    boardstatus = DeviceStatus.Status.IN;
+                }
                 break;
 
         }
 
         String uuid = PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", "");
+        boolean isHidden = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("hidden", false);
+        String name = PreferenceManager.getDefaultSharedPreferences(context).getString("name", "Unnamed");
 
         System.out.println("Update: " + provider);
 
         // Send location update to backend.
-        DeviceStatus status = new DeviceStatus(UUID.fromString(uuid), "test", boardstatus, location, roomId);
+        DeviceStatus status = null;
+        if(isHidden) {
+            status = new DeviceStatus(UUID.fromString(uuid), name, DeviceStatus.Status.HIDDEN, "-", "");
+        }
+        else {
+            status = new DeviceStatus(UUID.fromString(uuid), name, boardstatus, location, roomId);
+        }
         NetworkManager.getInstance(context).getUbicomService().sendDeviceStatus(status.deviceId.toString(), status).enqueue(new Callback<DeviceStatus>() {
             @Override
             public void onResponse(Call<DeviceStatus> call, Response<DeviceStatus> response) {

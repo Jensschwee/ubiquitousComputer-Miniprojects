@@ -163,16 +163,22 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            LocationServices.GeofencingApi.addGeofences(
-                    mGoogleApiClient,
-                    getGeofencingRequest(),
-                    getGeofencePendingIntent()
-            ).setResultCallback(this);
+            if(mGoogleApiClient.isConnected()) {
+                LocationServices.GeofencingApi.addGeofences(
+                        mGoogleApiClient,
+                        getGeofencingRequest(),
+                        getGeofencePendingIntent()
+                ).setResultCallback(this);
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
+        LocationServices.GeofencingApi.removeGeofences(
+                mGoogleApiClient,
+                getGeofencePendingIntent()
+        ).setResultCallback(this);
         super.onDestroy();
     }
 

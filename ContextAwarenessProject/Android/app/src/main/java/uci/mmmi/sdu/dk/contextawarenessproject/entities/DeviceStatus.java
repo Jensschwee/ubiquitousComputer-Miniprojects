@@ -10,6 +10,7 @@ public class DeviceStatus {
 
     public enum Status {
         IN,
+        HIDDEN,
         OUT
     }
 

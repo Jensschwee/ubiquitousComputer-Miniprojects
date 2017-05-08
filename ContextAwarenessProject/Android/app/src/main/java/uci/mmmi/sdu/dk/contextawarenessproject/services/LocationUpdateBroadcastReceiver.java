@@ -24,8 +24,8 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String provider = intent.getStringExtra("provider");
-        double lat = intent.getDoubleExtra("lat", 0);
-        double lng = intent.getDoubleExtra("lng", 0);
+        double lat = intent.getDoubleExtra("lat", 0.0);
+        double lng = intent.getDoubleExtra("lng", 0.0);
         String location = intent.getStringExtra("location");
         String roomId = intent.getStringExtra("roomId");
 

@@ -10,7 +10,8 @@ public class DeviceStatus {
 
     public enum Status {
         IN,
-        OUT
+        OUT,
+        HIDDEN
     }
 
     public UUID deviceId;

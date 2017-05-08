@@ -37,22 +37,11 @@ import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Location;
 
 public class InOutBoardArrayAdapter extends ArrayAdapter<InOutBoardListItem> {
 
-    private List<DeviceStatus> mValues;
-    private DeviceLocation localPhoneLocation;
-    private Collection<OU44Location> locations;
-    private LinkedList<Beacons.beaconData> JSONbeacons;
     private Context context;
 
     public InOutBoardArrayAdapter(Context context) {
         super(context, R.layout.listitem_inout);
         this.context = context;
-
-        InputStream inStream = context.getResources().openRawResource(R.raw.all_rooms_sdu);
-        Reader rd = new BufferedReader(new InputStreamReader(inStream));
-        Gson gson = new Gson();
-//        locations = gson.fromJson(rd, OU44LocationRoot.class);
-        Type collectionType = new TypeToken<Collection<OU44Location>>(){}.getType();
-        locations = gson.fromJson(rd, collectionType);
     }
 
     @Override
@@ -73,15 +62,17 @@ public class InOutBoardArrayAdapter extends ArrayAdapter<InOutBoardListItem> {
 
         if (listItem != null) {
             Drawable drawable = context.getResources().getDrawable(R.drawable.dot);
-            if (listItem.isIn()) {
+            if (listItem.getStatus().status == DeviceStatus.Status.IN) {
                 drawable.mutate().setColorFilter(Color.parseColor("#00ff00"), PorterDuff.Mode.SRC_IN);
-            } else {
+            } else if (listItem.getStatus().status == DeviceStatus.Status.OUT){
                 drawable.mutate().setColorFilter(Color.parseColor("#ff0000"), PorterDuff.Mode.SRC_IN);
+            } else {
+                drawable.mutate().setColorFilter(Color.parseColor("#D3D3D3"), PorterDuff.Mode.SRC_IN);
             }
             holder.statusImageView.setImageDrawable(drawable);
-            holder.locationTextView.setText(listItem.getLocation());
-            holder.distanceTextView.setText(Integer.toString(listItem.getDistance()));
-            holder.userNameTextView.setText(listItem.getUsername());
+            holder.locationTextView.setText(listItem.getStatus().location);
+            holder.distanceTextView.setText(listItem.getStatus().distance);
+            holder.userNameTextView.setText(listItem.getStatus().username);
         }
         return rowView;
     }
@@ -91,50 +82,5 @@ public class InOutBoardArrayAdapter extends ArrayAdapter<InOutBoardListItem> {
         TextView distanceTextView;
         TextView userNameTextView;
         ImageView statusImageView;
-    }
-
-    public void calculateDistance()
-    {
-        for (DeviceStatus device:mValues) {
-            DeviceLocation deviceLocation = findLocation(device);
-            if(deviceLocation.floor.equals(localPhoneLocation.floor)) {
-                Location me = new Location("");
-                Location dest = new Location("");
-
-                me.setLatitude(localPhoneLocation.lat);
-                me.setLongitude(localPhoneLocation.lng);
-
-                dest.setLatitude(deviceLocation.lat);
-                dest.setLongitude(deviceLocation.lng);
-
-                float dist = me.distanceTo(dest);
-                device.distance = String.valueOf(Math.round(dist));
-            }
-            else
-                device.distance = deviceLocation.floor;
-        }
-    }
-
-    public DeviceStatus findLocalPhone(String deviceId)
-    {
-        for(DeviceStatus device : mValues) {
-            if(device.deviceId.equals(deviceId))
-            {
-                return device;
-            }
-        }
-        return null;
-    }
-
-    public DeviceLocation findLocation(DeviceStatus device)
-    {
-        for(OU44Location l : locations) {
-
-            if(device.roomId.equals(l.getProperties().getRoomId())) {
-                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
-                return deviceLocation;
-            }
-        }
-        return null;
     }
 }

@@ -9,6 +9,7 @@ public class InOutBoardListItem {
     private String location;
     private int distance;
     private boolean in;
+    private DeviceStatus status;
     private String username;
 
     public InOutBoardListItem(){}
@@ -18,6 +19,18 @@ public class InOutBoardListItem {
         this.distance = distance;
         this.username = username;
         this.in = in;
+    }
+
+    public InOutBoardListItem(DeviceStatus status) {
+        this.status = status;
+    }
+
+    public DeviceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeviceStatus status) {
+        this.status = status;
     }
 
     public String getLocation() {

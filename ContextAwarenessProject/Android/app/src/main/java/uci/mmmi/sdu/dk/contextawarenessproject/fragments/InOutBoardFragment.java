@@ -105,7 +105,7 @@ public class InOutBoardFragment extends ListFragment {
                                 deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
                             }
 
-                            calculateDistance();
+                            //calculateDistance();
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));
                             }

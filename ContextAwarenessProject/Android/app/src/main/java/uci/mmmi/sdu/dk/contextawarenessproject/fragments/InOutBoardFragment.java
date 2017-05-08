@@ -127,6 +127,7 @@ public class InOutBoardFragment extends ListFragment {
                             String deviceId = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("deviceUUID", null);
                             DeviceStatus deviceStatus = findLocalPhone(deviceId);
                             localPhoneLocation = findLocation(deviceStatus);
+                            deviceList.remove(deviceStatus);
                             calculateDistance();
 
                             for (DeviceStatus status : deviceList) {

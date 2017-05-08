@@ -217,7 +217,7 @@ public class InOutBoardFragment extends ListFragment {
     public DeviceLocation findLocation(DeviceStatus device) {
         for(OU44Location l : locations) {
             if(device.roomId.equals(l.getProperties().getRoomId())) {
-                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(1), l.getGeometry().getCoordinates().get(0));
+                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
                 return deviceLocation;
             }
         }

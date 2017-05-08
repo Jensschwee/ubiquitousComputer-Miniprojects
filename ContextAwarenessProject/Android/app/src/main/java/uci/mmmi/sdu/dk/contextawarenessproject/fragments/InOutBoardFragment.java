@@ -182,10 +182,6 @@ public class InOutBoardFragment extends ListFragment {
             if(!device.status.equals(DeviceStatus.Status.IN) || device.roomId.isEmpty())
                 continue;
             DeviceLocation deviceLocation = findLocation(device);
-            System.out.println(deviceLocation);
-            System.out.println(deviceLocation.floor);
-            System.out.println(localPhoneLocation);
-            System.out.println(localPhoneLocation.floor);
             if(deviceLocation.floor.equals(localPhoneLocation.floor)) {
                 Location me = new Location("");
                 Location dest = new Location("");
@@ -217,7 +213,7 @@ public class InOutBoardFragment extends ListFragment {
     public DeviceLocation findLocation(DeviceStatus device) {
         for(OU44Location l : locations) {
             if(device.roomId.equals(l.getProperties().getRoomId())) {
-                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
+                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(1), l.getGeometry().getCoordinates().get(0));
                 return deviceLocation;
             }
         }

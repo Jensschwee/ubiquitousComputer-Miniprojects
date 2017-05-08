@@ -202,8 +202,8 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
             if(device.getUniqueId().equals("VLqb")) {
                 Intent intent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
                 intent.putExtra("provider", "KontaktBLE");
-                intent.putExtra("lat", 0);
-                intent.putExtra("lng", 0);
+                intent.putExtra("lat", 55.3674083780001);
+                intent.putExtra("lng", 10.4307825390001);
                 intent.putExtra("location", "Studiezone");
                 intent.putExtra("roomId", "Ø22-508-0");
                 getApplicationContext().sendBroadcast(intent);

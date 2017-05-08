@@ -179,7 +179,7 @@ public class InOutBoardFragment extends ListFragment {
 
     public void calculateDistance() {
         for (DeviceStatus device : deviceList) {
-            if(!device.status.equals(DeviceStatus.Status.IN))
+            if(!device.status.equals(DeviceStatus.Status.IN) || device.roomId.isEmpty())
                 continue;
             DeviceLocation deviceLocation = findLocation(device);
             System.out.println(deviceLocation);
@@ -215,12 +215,12 @@ public class InOutBoardFragment extends ListFragment {
     }
 
     public DeviceLocation findLocation(DeviceStatus device) {
-        /*for(OU44Location l : locations) {
+        for(OU44Location l : locations) {
             if(device.roomId.equals(l.getProperties().getRoomId())) {
-                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
+                DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(1), l.getGeometry().getCoordinates().get(0));
                 return deviceLocation;
             }
-        }*/
+        }
         return new DeviceLocation("0", localLat, localLng);
     }
 }

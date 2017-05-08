@@ -54,28 +54,28 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         mapsViewPager = (ViewPager) findViewById(R.id.fragment_maps_viewpager);
         mapsViewPager.setAdapter(mapsViewPagerAdapter);
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        }
+        buildGoogleApiClient();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API)
+            .build();
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
+        mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -156,27 +156,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 allowed.contains(Manifest.permission.ACCESS_FINE_LOCATION) &&
                 allowed.contains(Manifest.permission.BLUETOOTH) &&
                 allowed.contains(Manifest.permission.BLUETOOTH_ADMIN)) {
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            if(mGoogleApiClient.isConnected()) {
-                LocationServices.GeofencingApi.addGeofences(
-                        mGoogleApiClient,
-                        getGeofencingRequest(),
-                        getGeofencePendingIntent()
-                ).setResultCallback(this);
+            if(!mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        LocationServices.GeofencingApi.removeGeofences(
-                mGoogleApiClient,
-                getGeofencePendingIntent()
-        ).setResultCallback(this);
-        super.onDestroy();
     }
 
     @Override
@@ -200,10 +183,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnectionSuspended(int i) {
-        LocationServices.GeofencingApi.removeGeofences(
-                mGoogleApiClient,
-                getGeofencePendingIntent()
-        ).setResultCallback(this);
+        mGoogleApiClient.connect();
     }
 
     @Override

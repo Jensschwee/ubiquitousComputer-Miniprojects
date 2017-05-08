@@ -1,5 +1,9 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -15,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import uci.mmmi.sdu.dk.contextawarenessproject.R;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 
 public class SettingsFragment extends Fragment {
 
@@ -22,8 +27,11 @@ public class SettingsFragment extends Fragment {
     private EditText name;
     private CheckBox hiddenMode;
 
-    public SettingsFragment() {
-    }
+    private TextView roomIdTextView;
+    private TextView locationTextView;
+    private BroadcastReceiver locationUpdatedReceiver;
+
+    public SettingsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,12 +39,28 @@ public class SettingsFragment extends Fragment {
         hello = (TextView) rootView.findViewById(R.id.fragment_settings_text);
         name = (EditText) rootView.findViewById(R.id.fragment_settings_name);
         hiddenMode = (CheckBox) rootView.findViewById(R.id.fragment_settings_hidden);
+
+        roomIdTextView = (TextView) rootView.findViewById(R.id.fragment_settings_roomid_textview);
+        locationTextView = (TextView) rootView.findViewById(R.id.fragment_settings_location_textview);
+
         return rootView;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationUpdatedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String roomId = intent.getStringExtra("roomId");
+                String location = intent.getStringExtra("location");
+                if (roomId != null && !roomId.isEmpty()) roomIdTextView.setText(roomId);
+                else roomIdTextView.setText("-'");
+                if (location != null && !location.isEmpty()) locationTextView.setText(location);
+                else locationTextView.setText("-");
+            }
+        };
+        getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
     }
 
     @Override

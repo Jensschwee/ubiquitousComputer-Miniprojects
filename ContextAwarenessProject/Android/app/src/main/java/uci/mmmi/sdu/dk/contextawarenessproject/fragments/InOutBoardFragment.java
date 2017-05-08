@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.w3c.dom.Text;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +67,7 @@ public class InOutBoardFragment extends ListFragment {
     private double localLat = 5d;
     private double localLng = 5d;
 
+
     public InOutBoardFragment() {}
 
     @Override
@@ -95,7 +99,7 @@ public class InOutBoardFragment extends ListFragment {
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
 
-        pullDataWithInterval(10000);
+        pullDataWithInterval(5000);
     }
 
     @Override
@@ -131,6 +135,7 @@ public class InOutBoardFragment extends ListFragment {
                             DeviceStatus deviceStatus = findLocalPhone(deviceId);
                             localPhoneLocation = findLocation(deviceStatus);
                             deviceList.remove(deviceStatus);
+
                             calculateDistance();
 
                             for (DeviceStatus status : deviceList) {
@@ -231,6 +236,7 @@ public class InOutBoardFragment extends ListFragment {
         ArrayList<DeviceStatus> first = new ArrayList<>();
         ArrayList<DeviceStatus> sameFloor = new ArrayList<>();
         ArrayList<DeviceStatus> out = new ArrayList<>();
+        ArrayList<DeviceStatus> in = new ArrayList<>();
         ArrayList<DeviceStatus> rest = new ArrayList<>();
 
         if (localPhoneLocation.floor != null) {
@@ -250,13 +256,15 @@ public class InOutBoardFragment extends ListFragment {
 
         for (DeviceStatus device : deviceList) {
             if (!(device.status == DeviceStatus.Status.IN) && (device.roomId == null || device.roomId.isEmpty())) {
-                out.add(device);
+                in.add(device);
             } else if (device.distance.equals("Parterre")) {
                 parterre.add(device);
             } else if (device.distance.equals("Ground floor")) {
                 ground.add(device);
             } else if (device.distance.equals("1. floor")) {
                 first.add(device);
+            } else if (device.status == DeviceStatus.Status.OUT) {
+                out.add(device);
             } else {
                 rest.add(device);
             }
@@ -267,6 +275,7 @@ public class InOutBoardFragment extends ListFragment {
         if (!parterre.isEmpty()) deviceList.addAll(parterre);
         if (!ground.isEmpty()) deviceList.addAll(ground);
         if (!first.isEmpty()) deviceList.addAll(first);
+        if (!in.isEmpty()) deviceList.addAll(in);
         if (!out.isEmpty()) deviceList.addAll(out);
         if (!rest.isEmpty()) deviceList.addAll(rest);
     }

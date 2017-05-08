@@ -70,7 +70,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
-        // TODO: Generate and save UUID in SharedPreferences.
     }
 
     @Override

@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         setContentView(R.layout.activity_maps);
 
         if (!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).commit();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("deviceUUID", UUID.randomUUID().toString()).apply();
         }
 
         mapsViewPagerAdapter = new MapsViewPagerAdapter(getSupportFragmentManager());

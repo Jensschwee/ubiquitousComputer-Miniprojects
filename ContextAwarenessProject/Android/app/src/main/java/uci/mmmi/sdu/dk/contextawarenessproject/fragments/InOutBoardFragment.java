@@ -1,9 +1,13 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +30,7 @@ import uci.mmmi.sdu.dk.contextawarenessproject.pojos.DeviceStatus;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.InOutBoardListItem;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.OU44Location;
 import uci.mmmi.sdu.dk.contextawarenessproject.pojos.RemoteDeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -37,6 +42,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 
@@ -49,8 +55,10 @@ public class InOutBoardFragment extends ListFragment {
     private DeviceLocation localPhoneLocation;
     private Collection<OU44Location> locations;
     private LinkedList<Beacons.beaconData> JSONbeacons;
+    private BroadcastReceiver locationUpdatedReceiver;
 
-
+    private double localLat = 0;
+    private double localLng = 0;
 
     public InOutBoardFragment() {}
 
@@ -71,6 +79,15 @@ public class InOutBoardFragment extends ListFragment {
         adapter.clear();
         adapter.addAll(listData);
         adapter.notifyDataSetChanged();
+
+        locationUpdatedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                localLat = intent.getDoubleExtra("lat", 0);
+                localLng = intent.getDoubleExtra("lng", 0);
+            }
+        };
+        getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
 
         pullDataWithInterval(10000);
     }
@@ -93,6 +110,7 @@ public class InOutBoardFragment extends ListFragment {
                             ArrayList<RemoteDeviceStatus> networkList = (ArrayList<RemoteDeviceStatus>) response.body();
                             deviceList.clear();
                             listData.clear();
+
                             for (RemoteDeviceStatus status : networkList) {
                                 DeviceStatus.Status statusEnum = DeviceStatus.Status.IN;
                                 if (status.status.equals("IN")) {
@@ -105,10 +123,15 @@ public class InOutBoardFragment extends ListFragment {
                                 deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
                             }
 
-                            //calculateDistance();
+                            String deviceId = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("deviceUUID", null);
+                            DeviceStatus deviceStatus = findLocalPhone(deviceId);
+                            localPhoneLocation = findLocation(deviceStatus);
+                            calculateDistance();
+
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));
                             }
+
                             adapter.clear();
                             adapter.addAll(listData);
                             adapter.notifyDataSetChanged();
@@ -140,6 +163,12 @@ public class InOutBoardFragment extends ListFragment {
     }
 
     @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(locationUpdatedReceiver);
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
@@ -149,6 +178,10 @@ public class InOutBoardFragment extends ListFragment {
     public void calculateDistance() {
         for (DeviceStatus device : deviceList) {
             DeviceLocation deviceLocation = findLocation(device);
+            System.out.println(deviceLocation);
+            System.out.println(deviceLocation.floor);
+            System.out.println(localPhoneLocation);
+            System.out.println(localPhoneLocation.floor);
             if(deviceLocation.floor.equals(localPhoneLocation.floor)) {
                 Location me = new Location("");
                 Location dest = new Location("");
@@ -170,7 +203,7 @@ public class InOutBoardFragment extends ListFragment {
 
     public DeviceStatus findLocalPhone(String deviceId) {
         for(DeviceStatus device : deviceList) {
-            if(device.deviceId.equals(deviceId)) {
+            if(device.deviceId.toString().equals(deviceId)) {
                 return device;
             }
         }
@@ -178,12 +211,12 @@ public class InOutBoardFragment extends ListFragment {
     }
 
     public DeviceLocation findLocation(DeviceStatus device) {
-        for(OU44Location l : locations) {
+        /*for(OU44Location l : locations) {
             if(device.roomId.equals(l.getProperties().getRoomId())) {
                 DeviceLocation deviceLocation = new DeviceLocation(l.getProperties().getFloor(), l.getGeometry().getCoordinates().get(0), l.getGeometry().getCoordinates().get(1));
                 return deviceLocation;
             }
-        }
-        return null;
+        }*/
+        return new DeviceLocation("0", localLat, localLng);
     }
 }

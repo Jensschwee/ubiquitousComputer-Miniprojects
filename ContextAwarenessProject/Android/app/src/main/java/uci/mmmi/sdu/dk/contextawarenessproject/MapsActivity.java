@@ -45,6 +45,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        handlePermissions();
+
         setContentView(R.layout.activity_maps);
 
         if (!PreferenceManager.getDefaultSharedPreferences(this).contains("deviceUUID")) {
@@ -57,10 +59,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
         }
     }
 

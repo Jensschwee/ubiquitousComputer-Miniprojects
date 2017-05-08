@@ -10,7 +10,7 @@ import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.DeviceStatus;
 import uci.mmmi.sdu.dk.contextawarenessproject.net.NetworkManager;
 
 /**

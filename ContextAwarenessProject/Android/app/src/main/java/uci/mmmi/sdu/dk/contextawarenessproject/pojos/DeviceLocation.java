@@ -1,8 +1,4 @@
-package uci.mmmi.sdu.dk.contextawarenessproject.entities;
-
-/**
- * Created by jens on 05-05-2017.
- */
+package uci.mmmi.sdu.dk.contextawarenessproject.pojos;
 
 public class DeviceLocation {
     public String floor;

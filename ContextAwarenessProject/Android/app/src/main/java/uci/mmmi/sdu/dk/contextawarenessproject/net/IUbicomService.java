@@ -7,7 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import uci.mmmi.sdu.dk.contextawarenessproject.entities.DeviceStatus;
+import uci.mmmi.sdu.dk.contextawarenessproject.pojos.DeviceStatus;
 
 /**
  * Created by peter on 28-04-17.

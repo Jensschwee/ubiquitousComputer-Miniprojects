@@ -60,8 +60,8 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 0;
-    private double localLng = 0;
+    private double localLat = 0f;
+    private double localLng = 0f;
 
     public InOutBoardFragment() {}
 
@@ -86,8 +86,8 @@ public class InOutBoardFragment extends ListFragment {
         locationUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                localLat = intent.getDoubleExtra("lat", 0);
-                localLng = intent.getDoubleExtra("lng", 0);
+                localLat = intent.getDoubleExtra("lat", 0f);
+                localLng = intent.getDoubleExtra("lng", 0f);
             }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
@@ -190,8 +190,12 @@ public class InOutBoardFragment extends ListFragment {
                 me.setLatitude(localPhoneLocation.lat);
                 me.setLongitude(localPhoneLocation.lng);
 
+                System.out.println(localPhoneLocation.lat);
+
                 dest.setLatitude(deviceLocation.lat);
                 dest.setLongitude(deviceLocation.lng);
+
+                System.out.println(deviceLocation.lat);
 
                 float dist = me.distanceTo(dest);
                 device.distance = String.valueOf(Math.round(dist)) + " m";

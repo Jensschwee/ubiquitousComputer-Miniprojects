@@ -105,9 +105,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void positioningChanged(String provider, double lat, double lng, String location, String roomId) {
         LatLng currentLocation = new LatLng(lat, lng);
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        if(mMap != null) {
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(currentLocation).title(location));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        }
         latText.setText("" + lat);
         longText.setText("" + lng);
         sensorText.setText(provider);

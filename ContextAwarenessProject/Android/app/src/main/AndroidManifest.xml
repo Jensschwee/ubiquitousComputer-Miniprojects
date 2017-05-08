@@ -52,13 +52,10 @@
             android:name="com.kontakt.sdk.android.ble.service.ProximityService"
             android:exported="false" />
         <service
-            android:name=".services.GPSService"
-            android:enabled="true"
-            android:exported="true"></service>
-        <service
             android:name=".services.KontaktBLEService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+        <service android:name=".services.GeofenceTransitionService" />
 
         <receiver android:name=".services.LocationUpdateBroadcastReceiver">
             <intent-filter>

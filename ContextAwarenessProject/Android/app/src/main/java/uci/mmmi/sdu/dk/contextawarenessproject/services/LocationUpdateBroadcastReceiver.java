@@ -43,6 +43,8 @@ public class LocationUpdateBroadcastReceiver extends BroadcastReceiver {
 
         String uuid = PreferenceManager.getDefaultSharedPreferences(context).getString("deviceUUID", "");
 
+        System.out.println("Update: " + provider);
+
         // Send location update to backend.
         DeviceStatus status = new DeviceStatus(UUID.fromString(uuid), "test", boardstatus, location, roomId);
         NetworkManager.getInstance(context).getUbicomService().sendDeviceStatus(status.deviceId.toString(), status).enqueue(new Callback<DeviceStatus>() {

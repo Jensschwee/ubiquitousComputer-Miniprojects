@@ -197,7 +197,7 @@ public class InOutBoardFragment extends ListFragment {
                 dest.setLongitude(deviceLocation.lng);
 
                 float dist = me.distanceTo(dest);
-                device.distance = String.valueOf(Math.round(dist)) + "m";
+                device.distance = String.valueOf(Math.round(dist)) + " m";
             }
             else {
                 device.distance = deviceLocation.floor;

@@ -39,6 +39,8 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -183,6 +185,7 @@ public class InOutBoardFragment extends ListFragment {
             if(!device.status.equals(DeviceStatus.Status.IN) || device.roomId.isEmpty())
                 continue;
             DeviceLocation deviceLocation = findLocation(device);
+            device.floor = deviceLocation.floor;
             System.out.println(deviceLocation);
             System.out.println(deviceLocation.floor);
             System.out.println(localPhoneLocation);
@@ -198,7 +201,7 @@ public class InOutBoardFragment extends ListFragment {
                 dest.setLongitude(deviceLocation.lng);
 
                 float dist = me.distanceTo(dest);
-                device.distance = String.valueOf(Math.round(dist)) + " m";
+                device.distance = String.valueOf(Math.round(dist));
             }
             else {
                 switch (deviceLocation.floor) {
@@ -214,7 +217,64 @@ public class InOutBoardFragment extends ListFragment {
                 }
             }
         }
+        sortDeviceList();
     }
+
+    private void sortDeviceList() {
+        ArrayList<DeviceStatus> parterre = new ArrayList<>();
+        ArrayList<DeviceStatus> ground = new ArrayList<>();
+        ArrayList<DeviceStatus> first = new ArrayList<>();
+        ArrayList<DeviceStatus> sameFloor = new ArrayList<>();
+        ArrayList<DeviceStatus> out = new ArrayList<>();
+
+        if (localPhoneLocation.floor != null) {
+            for (DeviceStatus device : deviceList) {
+                if (device.floor != null) {
+                    if (device.floor.equals(localPhoneLocation.floor)) {
+                        sameFloor.add(device);
+                    }
+                }
+            }
+        }
+        if (!sameFloor.isEmpty()) Collections.sort(sameFloor, new DeviceDistanceMeterComparator());
+        
+        for (DeviceStatus device : sameFloor) {
+            if (deviceList.contains(device)) deviceList.remove(device);
+        }
+
+        for (DeviceStatus device : deviceList) {
+            if (device.status == DeviceStatus.Status.IN && (device.roomId == null || device.roomId.isEmpty())) {
+                out.add(device);
+            } else if (device.distance.equals("Parterre")) {
+                parterre.add(device);
+            } else if (device.distance.equals("Ground floor")) {
+                ground.add(device);
+            } else if (device.distance.equals("1. floor")) {
+                first.add(device);
+            }
+        }
+        deviceList.clear();
+        if (!sameFloor.isEmpty()) deviceList.addAll(sameFloor);
+        if (!parterre.isEmpty()) deviceList.addAll(parterre);
+        if (!ground.isEmpty()) deviceList.addAll(ground);
+        if (!first.isEmpty()) deviceList.addAll(first);
+        if (!out.isEmpty()) deviceList.addAll(out);
+    }
+
+    private class DeviceDistanceMeterComparator implements Comparator<DeviceStatus> {
+        @Override
+        public int compare(DeviceStatus lhs, DeviceStatus rhs) {
+            if(Integer.parseInt(lhs.distance) < Integer.parseInt(rhs.distance)) {
+                return -1;
+            }
+            else if (Integer.parseInt(lhs.distance) > Integer.parseInt(rhs.distance)){
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
 
     public DeviceStatus findLocalPhone(String deviceId) {
         for(DeviceStatus device : deviceList) {

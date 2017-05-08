@@ -64,13 +64,20 @@ public class InOutBoardArrayAdapter extends ArrayAdapter<InOutBoardListItem> {
             Drawable drawable = context.getResources().getDrawable(R.drawable.dot);
             if (listItem.getStatus().status == DeviceStatus.Status.IN) {
                 drawable.mutate().setColorFilter(Color.parseColor("#00ff00"), PorterDuff.Mode.SRC_IN);
-                holder.distanceTextView.setText(listItem.getStatus().distance);
+                if (listItem.getStatus().distance.isEmpty()) {
+                    holder.distanceTextView.setText("-  ");
+                } else {
+                    if (listItem.getStatus().distance.equals("Parterre")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else if (listItem.getStatus().distance.equals("Ground floor")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else if (listItem.getStatus().distance.equals("1. floor")) holder.distanceTextView.setText(listItem.getStatus().distance);
+                    else holder.distanceTextView.setText(listItem.getStatus().distance + " m");
+                }
             } else if (listItem.getStatus().status == DeviceStatus.Status.OUT){
                 drawable.mutate().setColorFilter(Color.parseColor("#ff0000"), PorterDuff.Mode.SRC_IN);
-                holder.distanceTextView.setText("-");
+                holder.distanceTextView.setText("-  ");
             } else if (listItem.getStatus().status == DeviceStatus.Status.HIDDEN){
                 drawable.mutate().setColorFilter(Color.parseColor("#D3D3D3"), PorterDuff.Mode.SRC_IN);
-                holder.distanceTextView.setText("-");
+                holder.distanceTextView.setText("-  ");
             }
             holder.statusImageView.setImageDrawable(drawable);
             holder.locationTextView.setText(listItem.getStatus().location);

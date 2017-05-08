@@ -19,6 +19,7 @@ public class DeviceStatus {
     public Status status;
     public String location;
     public String roomId;
+    public String floor;
 
     public transient String distance;
 

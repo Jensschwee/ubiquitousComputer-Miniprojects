@@ -60,8 +60,8 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 0;
-    private double localLng = 0;
+    private double localLat = 0.0;
+    private double localLng = 0.0;
 
     public InOutBoardFragment() {}
 
@@ -86,8 +86,8 @@ public class InOutBoardFragment extends ListFragment {
         locationUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                localLat = intent.getDoubleExtra("lat", 0);
-                localLng = intent.getDoubleExtra("lng", 0);
+                localLat = intent.getDoubleExtra("lat", 0.0);
+                localLng = intent.getDoubleExtra("lng", 0.0);
             }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
@@ -201,7 +201,17 @@ public class InOutBoardFragment extends ListFragment {
                 device.distance = String.valueOf(Math.round(dist)) + " m";
             }
             else {
-                device.distance = deviceLocation.floor;
+                switch (deviceLocation.floor) {
+                    case "0":
+                        device.distance = "Parterre";
+                        break;
+                    case "1":
+                        device.distance = "Ground floor";
+                        break;
+                    case "2":
+                        device.distance = "1. floor";
+                        break;
+                }
             }
         }
     }

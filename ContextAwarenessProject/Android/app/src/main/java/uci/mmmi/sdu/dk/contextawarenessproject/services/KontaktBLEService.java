@@ -196,6 +196,19 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
                     break;
                 }
             }
+
+
+            // Hardcoded test-beacon
+            if(device.getUniqueId().equals("VLqb")) {
+                Intent intent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
+                intent.putExtra("provider", "KontaktBLE");
+                intent.putExtra("lat", 0);
+                intent.putExtra("lng", 0);
+                intent.putExtra("location", "Studiezone");
+                intent.putExtra("roomId", "Ø22-508-0");
+                getApplicationContext().sendBroadcast(intent);
+                Log.d("KontaktBLEService", "Sending: " + intent.toString());
+            }
         }
     }
 
@@ -226,7 +239,7 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
                 setClosestIBeacon(ibeacons);
                 if(ibeacons.size() == 0) {
                     System.out.println(ibeacons.size());
-                    startService(new Intent(getApplicationContext(), GPSService.class));
+                    //startService(new Intent(getApplicationContext(), GPSService.class));
                     Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
                 }
                 Log.i("Sample", "IBeacon list: " + ibeacons.size());
@@ -245,14 +258,14 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
             @Override
             public void onRegionEntered(IBeaconRegion region) {
                 super.onRegionEntered(region);
-                stopService(new Intent(getApplicationContext(), GPSService.class));
+                //stopService(new Intent(getApplicationContext(), GPSService.class));
                 Log.i("LocationUpdater", "BLE region entered, stopping GPS service.");
             }
 
             @Override
             public void onRegionAbandoned(IBeaconRegion region) {
                 super.onRegionAbandoned(region);
-                startService(new Intent(getApplicationContext(), GPSService.class));
+                //startService(new Intent(getApplicationContext(), GPSService.class));
                 Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
             }
         };

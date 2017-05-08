@@ -3,6 +3,7 @@ package uci.mmmi.sdu.dk.contextawarenessproject.fragments;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,47 +65,72 @@ public class InOutBoardFragment extends ListFragment {
         locations = gson.fromJson(rd, collectionType);
         listData = new ArrayList<>();
 
-        NetworkManager.getInstance(getActivity()).getUbicomService().getAllDeviceStatuses().enqueue(new Callback<List<RemoteDeviceStatus>>() {
-            @Override
-            public void onResponse(Call<List<RemoteDeviceStatus>> call, Response<List<RemoteDeviceStatus>> response) {
-                ArrayList<RemoteDeviceStatus> networkList = (ArrayList<RemoteDeviceStatus>) response.body();
-                for (RemoteDeviceStatus status : networkList) {
-                    DeviceStatus.Status statusEnum = DeviceStatus.Status.IN;
-                    if (status.status.equals("IN")) {
-                        statusEnum = DeviceStatus.Status.IN;
-                    } else if (status.status.equals("OUT")) {
-                        statusEnum = DeviceStatus.Status.OUT;
-                    } else if (status.status.equals("HIDDEN")){
-                        statusEnum = DeviceStatus.Status.HIDDEN;
-                    }
-                    deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
-                }
-                for (DeviceStatus status : deviceList) {
-                    listData.add(new InOutBoardListItem(status));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RemoteDeviceStatus>> call, Throwable t) {
-                Log.e("NETWORK", "Request to get all data failed");
-            }
-        });
-//        List<InOutBoardListItem> testList = new LinkedList<>();
-//        testList.add(new InOutBoardListItem("Peter", "U175", 1, true));
-//        testList.add(new InOutBoardListItem("Hal", "U176", 2, true));
-//        testList.add(new InOutBoardListItem("Jens", "U174", 1232131, false));
-
         if(adapter == null) {
             adapter = new InOutBoardArrayAdapter(getContext());
         }
         adapter.clear();
         adapter.addAll(listData);
         adapter.notifyDataSetChanged();
+
+        pullDataWithInterval(10000);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void pullDataWithInterval(final int millis) {
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                try{
+                    NetworkManager.getInstance(getActivity()).getUbicomService().getAllDeviceStatuses().enqueue(new Callback<List<RemoteDeviceStatus>>() {
+                        @Override
+                        public void onResponse(Call<List<RemoteDeviceStatus>> call, Response<List<RemoteDeviceStatus>> response) {
+                            ArrayList<RemoteDeviceStatus> networkList = (ArrayList<RemoteDeviceStatus>) response.body();
+                            deviceList.clear();
+                            listData.clear();
+                            for (RemoteDeviceStatus status : networkList) {
+                                DeviceStatus.Status statusEnum = DeviceStatus.Status.IN;
+                                if (status.status.equals("IN")) {
+                                    statusEnum = DeviceStatus.Status.IN;
+                                } else if (status.status.equals("OUT")) {
+                                    statusEnum = DeviceStatus.Status.OUT;
+                                } else if (status.status.equals("HIDDEN")){
+                                    statusEnum = DeviceStatus.Status.HIDDEN;
+                                }
+                                deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
+                            }
+
+                            calculateDistance();
+                            for (DeviceStatus status : deviceList) {
+                                listData.add(new InOutBoardListItem(status));
+                            }
+                            adapter.clear();
+                            adapter.addAll(listData);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<RemoteDeviceStatus>> call, Throwable t) {
+                            Log.e("NETWORK", "Request to get all data failed");
+                        }
+                    });
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("HANDLER", "SOMETHING WENT WRONG!");
+                }
+                finally{
+                    //also call the same runnable to call it at regular interval
+                    handler.postDelayed(this, millis);
+                }
+            }
+        };
+        runnable.run();
     }
 
     @Override
@@ -118,16 +144,6 @@ public class InOutBoardFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
         getListView().setAdapter(adapter);
         setListShown(false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     public void calculateDistance() {

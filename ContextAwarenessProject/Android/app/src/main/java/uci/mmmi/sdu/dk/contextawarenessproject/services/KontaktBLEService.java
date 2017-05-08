@@ -239,7 +239,7 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
                 setClosestIBeacon(ibeacons);
                 if(ibeacons.size() == 0) {
                     System.out.println(ibeacons.size());
-                    startService(new Intent(getApplicationContext(), GPSService.class));
+                    //startService(new Intent(getApplicationContext(), GPSService.class));
                     Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
                 }
                 Log.i("Sample", "IBeacon list: " + ibeacons.size());
@@ -258,14 +258,14 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
             @Override
             public void onRegionEntered(IBeaconRegion region) {
                 super.onRegionEntered(region);
-                stopService(new Intent(getApplicationContext(), GPSService.class));
+                //stopService(new Intent(getApplicationContext(), GPSService.class));
                 Log.i("LocationUpdater", "BLE region entered, stopping GPS service.");
             }
 
             @Override
             public void onRegionAbandoned(IBeaconRegion region) {
                 super.onRegionAbandoned(region);
-                startService(new Intent(getApplicationContext(), GPSService.class));
+                //startService(new Intent(getApplicationContext(), GPSService.class));
                 Log.i("LocationUpdater", "BLE region abandoned, starting GPS service.");
             }
         };

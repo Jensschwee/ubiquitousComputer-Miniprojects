@@ -55,7 +55,10 @@ public class InOutBoardFragment extends ListFragment {
     private DeviceLocation localPhoneLocation;
     private Collection<OU44Location> locations;
     private LinkedList<Beacons.beaconData> JSONbeacons;
+
     private BroadcastReceiver locationUpdatedReceiver;
+    private Handler handler = new Handler();
+    private Runnable dataPullRunnable;
 
     private double localLat = 0;
     private double localLng = 0;
@@ -98,9 +101,7 @@ public class InOutBoardFragment extends ListFragment {
     }
 
     private void pullDataWithInterval(final int millis) {
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-
+        dataPullRunnable = new Runnable() {
             @Override
             public void run() {
                 try{
@@ -153,7 +154,7 @@ public class InOutBoardFragment extends ListFragment {
                 }
             }
         };
-        runnable.run();
+        handler.post(dataPullRunnable);
     }
 
     @Override
@@ -165,6 +166,7 @@ public class InOutBoardFragment extends ListFragment {
     @Override
     public void onDestroy() {
         getActivity().unregisterReceiver(locationUpdatedReceiver);
+        handler.removeCallbacks(dataPullRunnable);
         super.onDestroy();
     }
 

@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static uci.mmmi.sdu.dk.contextawarenessproject.R.id.status;
 
 public class InOutBoardFragment extends ListFragment {
 

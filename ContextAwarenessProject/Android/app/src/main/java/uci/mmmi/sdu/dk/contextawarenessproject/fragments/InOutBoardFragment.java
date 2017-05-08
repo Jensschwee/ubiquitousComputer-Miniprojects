@@ -107,10 +107,10 @@ public class InOutBoardFragment extends ListFragment {
                                 deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
                             }
 
-                            String deviceId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("deviceUUID", null);
-                            DeviceStatus deviceStatus = findLocalPhone(deviceId);
-                            localPhoneLocation = findLocation(deviceStatus);
-                            calculateDistance();
+//                            String deviceId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("deviceUUID", null);
+//                            DeviceStatus deviceStatus = findLocalPhone(deviceId);
+//                            localPhoneLocation = findLocation(deviceStatus);
+//                            calculateDistance();
 
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));

@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import uci.mmmi.sdu.dk.contextawarenessproject.fragments.InOutBoardFragment;
 import uci.mmmi.sdu.dk.contextawarenessproject.fragments.MapsFragment;
 import uci.mmmi.sdu.dk.contextawarenessproject.fragments.SettingsFragment;
 
@@ -17,7 +18,7 @@ public class MapsViewPagerAdapter extends FragmentStatePagerAdapter {
     public MapsViewPagerAdapter(FragmentManager fm) {
         super(fm);
         settingsFragment = new SettingsFragment();
-        inNOutFragment = new Fragment();
+        inNOutFragment = new InOutBoardFragment();
         mapsFragment = new MapsFragment();
     }
 

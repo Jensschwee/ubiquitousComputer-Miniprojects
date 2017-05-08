@@ -57,7 +57,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // This is for updating stuff in the UI. Location is sent to the server via LocationUpdateBroadcastReceiver.
         locationUpdatedReceiver = new BroadcastReceiver() {
             @Override
-           public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent) {
                 String provider = intent.getStringExtra("provider");
                 double lat = intent.getDoubleExtra("lat", 0);
                 double lng = intent.getDoubleExtra("lng", 0);
@@ -67,7 +67,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 Log.d("Location Updated", provider + ": " + location);
 
                 positioningChanged(provider, lat, lng, location, roomId);
-           }
+            }
         };
         getActivity().registerReceiver(locationUpdatedReceiver, new IntentFilter(LocationUpdateBroadcastReceiver.LOCATION_UPDATED));
         // TODO: Generate and save UUID in SharedPreferences.

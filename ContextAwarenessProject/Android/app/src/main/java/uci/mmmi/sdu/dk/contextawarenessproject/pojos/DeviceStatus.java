@@ -1,4 +1,4 @@
-package uci.mmmi.sdu.dk.contextawarenessproject.entities;
+package uci.mmmi.sdu.dk.contextawarenessproject.pojos;
 
 import java.util.UUID;
 

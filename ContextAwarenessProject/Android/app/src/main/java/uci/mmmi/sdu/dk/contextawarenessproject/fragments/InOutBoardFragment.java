@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -93,6 +94,7 @@ public class InOutBoardFragment extends ListFragment {
                             ArrayList<RemoteDeviceStatus> networkList = (ArrayList<RemoteDeviceStatus>) response.body();
                             deviceList.clear();
                             listData.clear();
+
                             for (RemoteDeviceStatus status : networkList) {
                                 DeviceStatus.Status statusEnum = DeviceStatus.Status.IN;
                                 if (status.status.equals("IN")) {
@@ -105,10 +107,15 @@ public class InOutBoardFragment extends ListFragment {
                                 deviceList.add(new DeviceStatus(UUID.fromString(status.deviceId), status.username, statusEnum, status.location, status.roomId));
                             }
 
+                            String deviceId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("deviceUUID", null);
+                            DeviceStatus deviceStatus = findLocalPhone(deviceId);
+                            localPhoneLocation = findLocation(deviceStatus);
                             calculateDistance();
+
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));
                             }
+
                             adapter.clear();
                             adapter.addAll(listData);
                             adapter.notifyDataSetChanged();

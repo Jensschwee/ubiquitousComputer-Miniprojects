@@ -231,7 +231,6 @@ public class InOutBoardFragment extends ListFragment {
                 }
             }
         }
-        sortDeviceList();
     }
 
     private void sortDeviceList() {

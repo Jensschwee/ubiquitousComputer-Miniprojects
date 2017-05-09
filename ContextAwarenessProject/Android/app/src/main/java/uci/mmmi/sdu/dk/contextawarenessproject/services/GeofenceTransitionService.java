@@ -1,5 +1,6 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
@@ -30,7 +31,9 @@ public class GeofenceTransitionService extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent) {
+        System.out.println("LELELELE");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        LocationResult locationResult = LocationResult.extractResult(intent);
         if (geofencingEvent.hasError()) {
             return;
         }
@@ -56,8 +59,26 @@ public class GeofenceTransitionService extends IntentService {
             locationIntent.putExtra("location", "Outside OU44");
             getApplicationContext().sendBroadcast(locationIntent);
         }
-        else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
-            System.out.println("GEOFENCE DWELL");
+
+        if(locationResult != null) {
+            Location location = locationResult.getLastLocation();
+            if(location != null && !isMyServiceRunning(KontaktBLEService.class)) {
+                locationIntent.putExtra("lat", location.getLatitude());
+                locationIntent.putExtra("lng", location.getLongitude());
+                locationIntent.putExtra("location", "Outside OU44");
+                getApplicationContext().sendBroadcast(locationIntent);
+            }
         }
+    }
+    
+    //source: http://stackoverflow.com/questions/600207/how-to-check-if-a-service-is-running-on-android/5921190#5921190
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(getApplicationContext().ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

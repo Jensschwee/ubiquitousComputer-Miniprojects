@@ -205,7 +205,7 @@ public class KontaktBLEService extends Service implements ScanStatusListener {
                 intent.putExtra("lat", 55.3672128);
                 intent.putExtra("lng", 10.4307143);
                 intent.putExtra("location", "U182");
-                intent.putExtra("roomId", "Ø20-603c-2");
+                intent.putExtra("roomId", "Ø20-601b-2");
                 getApplicationContext().sendBroadcast(intent);
                 Log.d("KontaktBLEService", "Sending: " + intent.toString());
             }

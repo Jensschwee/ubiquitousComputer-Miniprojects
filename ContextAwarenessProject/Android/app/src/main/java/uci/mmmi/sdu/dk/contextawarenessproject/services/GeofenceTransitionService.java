@@ -31,6 +31,7 @@ public class GeofenceTransitionService extends IntentService {
 
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        LocationResult locationResult = LocationResult.extractResult(intent);
         if (geofencingEvent.hasError()) {
             return;
         }
@@ -56,7 +57,8 @@ public class GeofenceTransitionService extends IntentService {
             locationIntent.putExtra("location", "Outside OU44");
             getApplicationContext().sendBroadcast(locationIntent);
         }
-        else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
+
+        if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
             System.out.println("GEOFENCE DWELL");
         }
     }

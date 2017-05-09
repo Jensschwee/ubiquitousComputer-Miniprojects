@@ -95,7 +95,6 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
-<<<<<<< HEAD
                 String location = intent.getStringExtra("location");
                 switch (location) {
                     case "Outside OU44":
@@ -105,9 +104,6 @@ public class InOutBoardFragment extends ListFragment {
                             boardstatus = DeviceStatus.Status.IN;
                         break;
                 }
-=======
-
->>>>>>> 098dd9d1a0847fe0f4b3148db1ab6782650a805e
                 System.out.println(intent.getDoubleExtra("lat", 0d));
                 System.out.println(intent.getDoubleExtra("lng", 0d));
             }
@@ -245,7 +241,6 @@ public class InOutBoardFragment extends ListFragment {
                 }
             }
         }
-        sortDeviceList();
     }
 
     private void sortDeviceList() {

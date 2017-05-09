@@ -42,12 +42,14 @@ public class GeofenceTransitionService extends IntentService {
         locationIntent.putExtra("provider", "Geofencing");
         locationIntent.putExtra("roomId", "");
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            System.out.println("GEOFENCE ENTER");
             startService(new Intent(this, KontaktBLEService.class));
             locationIntent.putExtra("lat", geofencingEvent.getTriggeringLocation().getLatitude());
             locationIntent.putExtra("lng", geofencingEvent.getTriggeringLocation().getLongitude());
             locationIntent.putExtra("location", "Inside OU44");
             getApplicationContext().sendBroadcast(locationIntent);
         } else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            System.out.println("GEOFENCE EXIT");
             stopService(new Intent(this, KontaktBLEService.class));
             locationIntent.putExtra("lat", geofencingEvent.getTriggeringLocation().getLatitude());
             locationIntent.putExtra("lng", geofencingEvent.getTriggeringLocation().getLongitude());
@@ -55,7 +57,7 @@ public class GeofenceTransitionService extends IntentService {
             getApplicationContext().sendBroadcast(locationIntent);
         }
         else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
-            System.out.println("DWELL");
+            System.out.println("GEOFENCE DWELL");
         }
     }
 }

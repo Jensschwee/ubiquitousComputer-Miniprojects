@@ -256,18 +256,20 @@ public class InOutBoardFragment extends ListFragment {
         }
 
         for (DeviceStatus device : deviceList) {
-            if (!(device.status == DeviceStatus.Status.IN) || (device.roomId == null || device.roomId.isEmpty())) {
-                in.add(device);
-            } else if (device.distance.equals("Parterre")) {
+            if (device.distance.equals("Parterre")) {
                 parterre.add(device);
             } else if (device.distance.equals("Ground floor")) {
                 ground.add(device);
             } else if (device.distance.equals("1. floor")) {
                 first.add(device);
-            } else if (device.status == DeviceStatus.Status.OUT) {
-                out.add(device);
-            } else if (device.status == DeviceStatus.Status.IN) {
+            } else if (device.location.equals("Inside OU44")) {
                 in.add(device);
+            } else if (device.status.equals(DeviceStatus.Status.IN)) {
+                in.add(device);
+            } else if (device.status.equals(DeviceStatus.Status.OUT)) {
+                out.add(device);
+            } else if (device.status.equals(DeviceStatus.Status.HIDDEN)){
+                rest.add(device);
             } else {
                 rest.add(device);
             }

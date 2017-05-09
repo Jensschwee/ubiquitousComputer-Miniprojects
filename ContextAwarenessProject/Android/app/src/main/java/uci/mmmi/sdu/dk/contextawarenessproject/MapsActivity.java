@@ -30,6 +30,7 @@ import java.util.UUID;
 import uci.mmmi.sdu.dk.contextawarenessproject.adapters.MapsViewPagerAdapter;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GPSService;
 import uci.mmmi.sdu.dk.contextawarenessproject.services.GeofenceTransitionService;
+import uci.mmmi.sdu.dk.contextawarenessproject.services.LocationUpdateBroadcastReceiver;
 
 // Location Manager code based on following link:
 // http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial/
@@ -57,6 +58,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         mapsViewPagerAdapter = new MapsViewPagerAdapter(getSupportFragmentManager());
         mapsViewPager = (ViewPager) findViewById(R.id.fragment_maps_viewpager);
         mapsViewPager.setAdapter(mapsViewPagerAdapter);
+
+
+        Intent locationIntent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
+        locationIntent.putExtra("location", "Outside OU44");
+        locationIntent.putExtra("provider", "Geofencing");
+        locationIntent.putExtra("roomId", "");
+        getBaseContext().sendBroadcast(locationIntent);
 
         buildGoogleApiClient();
     }

@@ -136,6 +136,7 @@ public class InOutBoardFragment extends ListFragment {
                             localPhoneLocation = findLocation(deviceStatus);
                             deviceList.remove(deviceStatus);
 
+                            
                             calculateDistance();
 
                             for (DeviceStatus status : deviceList) {

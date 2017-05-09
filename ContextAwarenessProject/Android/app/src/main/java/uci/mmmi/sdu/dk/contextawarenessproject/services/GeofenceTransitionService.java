@@ -31,6 +31,7 @@ public class GeofenceTransitionService extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent) {
+        System.out.println("LELELELE");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         LocationResult locationResult = LocationResult.extractResult(intent);
         if (geofencingEvent.hasError()) {
@@ -59,15 +60,14 @@ public class GeofenceTransitionService extends IntentService {
             getApplicationContext().sendBroadcast(locationIntent);
         }
 
-        if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
-            System.out.println("GEOFENCE DWELL");
-            locationIntent.putExtra("lat", geofencingEvent.getTriggeringLocation().getLatitude());
-            locationIntent.putExtra("lng", geofencingEvent.getTriggeringLocation().getLongitude());
-            if(isMyServiceRunning(KontaktBLEService.class))
-                locationIntent.putExtra("location", "Inside OU44");
-            else
+        if(locationResult != null) {
+            Location location = locationResult.getLastLocation();
+            if(location != null && !isMyServiceRunning(KontaktBLEService.class)) {
+                locationIntent.putExtra("lat", location.getLatitude());
+                locationIntent.putExtra("lng", location.getLongitude());
                 locationIntent.putExtra("location", "Outside OU44");
-            getApplicationContext().sendBroadcast(locationIntent);
+                getApplicationContext().sendBroadcast(locationIntent);
+            }
         }
     }
 

@@ -22,6 +22,17 @@ public class GeofenceTransitionService extends IntentService {
         super("GeofencingTransitionService");
     }
 
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        Intent locationIntent = new Intent(LocationUpdateBroadcastReceiver.LOCATION_UPDATED);
+        locationIntent.putExtra("location", "Outside OU44");
+        locationIntent.putExtra("provider", "Geofencing");
+        locationIntent.putExtra("roomId", "");
+        getBaseContext().sendBroadcast(locationIntent);
+    }
+
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {

@@ -64,9 +64,9 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 5d;
-    private double localLng = 5d;
-
+    // Default is in the center of OU44.
+    private double localLat = 55.3674083780001;
+    private double localLng = 10.4307825390001;
 
     public InOutBoardFragment() {}
 
@@ -93,6 +93,7 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
+
                 System.out.println(intent.getDoubleExtra("lat", 0d));
                 System.out.println(intent.getDoubleExtra("lng", 0d));
             }

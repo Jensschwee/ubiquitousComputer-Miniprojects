@@ -67,6 +67,7 @@ public class InOutBoardFragment extends ListFragment {
     private double localLat = 5d;
     private double localLng = 5d;
 
+    DeviceStatus.Status boardstatus = DeviceStatus.Status.OUT;
 
     public InOutBoardFragment() {}
 
@@ -93,6 +94,15 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
+                String location = intent.getStringExtra("location");
+                switch (location) {
+                    case "Outside OU44":
+                        boardstatus = DeviceStatus.Status.OUT;
+                        break;
+                    case "Inside OU44":
+                            boardstatus = DeviceStatus.Status.IN;
+                        break;
+                }
                 System.out.println(intent.getDoubleExtra("lat", 0d));
                 System.out.println(intent.getDoubleExtra("lng", 0d));
             }
@@ -136,8 +146,8 @@ public class InOutBoardFragment extends ListFragment {
                             localPhoneLocation = findLocation(deviceStatus);
                             deviceList.remove(deviceStatus);
 
-                            
-                            calculateDistance();
+                            if(boardstatus.equals(DeviceStatus.Status.IN))
+                                calculateDistance();
 
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));
@@ -256,9 +266,7 @@ public class InOutBoardFragment extends ListFragment {
         }
 
         for (DeviceStatus device : deviceList) {
-            if (!(device.status == DeviceStatus.Status.IN) || (device.roomId == null || device.roomId.isEmpty())) {
-                in.add(device);
-            } else if (device.distance.equals("Parterre")) {
+            if (device.distance.equals("Parterre")) {
                 parterre.add(device);
             } else if (device.distance.equals("Ground floor")) {
                 ground.add(device);

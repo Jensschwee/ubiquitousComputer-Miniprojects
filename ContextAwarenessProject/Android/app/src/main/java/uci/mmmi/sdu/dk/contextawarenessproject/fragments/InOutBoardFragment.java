@@ -139,6 +139,8 @@ public class InOutBoardFragment extends ListFragment {
                             
                             calculateDistance();
 
+                            sortDeviceList();
+
                             for (DeviceStatus status : deviceList) {
                                 listData.add(new InOutBoardListItem(status));
                             }

@@ -255,7 +255,7 @@ public class InOutBoardFragment extends ListFragment {
         }
 
         for (DeviceStatus device : deviceList) {
-            if (!(device.status == DeviceStatus.Status.IN) && (device.roomId == null || device.roomId.isEmpty())) {
+            if (!(device.status == DeviceStatus.Status.IN) || (device.roomId == null || device.roomId.isEmpty())) {
                 in.add(device);
             } else if (device.distance.equals("Parterre")) {
                 parterre.add(device);
@@ -265,6 +265,8 @@ public class InOutBoardFragment extends ListFragment {
                 first.add(device);
             } else if (device.status == DeviceStatus.Status.OUT) {
                 out.add(device);
+            } else if (device.status == DeviceStatus.Status.IN) {
+                in.add(device);
             } else {
                 rest.add(device);
             }

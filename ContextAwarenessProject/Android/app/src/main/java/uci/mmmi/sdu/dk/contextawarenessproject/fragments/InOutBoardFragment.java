@@ -64,9 +64,9 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
-    private double localLat = 5d;
-    private double localLng = 5d;
-
+    // Default is in the center of OU44.
+    private double localLat = 55.3674083780001;
+    private double localLng = 10.4307825390001;
 
     public InOutBoardFragment() {}
 

@@ -116,7 +116,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         geofences.add(geofence);
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
         builder.addGeofences(geofences);
         return builder.build();
     }

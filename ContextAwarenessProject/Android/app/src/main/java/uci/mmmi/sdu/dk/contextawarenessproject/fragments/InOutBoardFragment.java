@@ -93,6 +93,7 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
+
                 System.out.println(intent.getDoubleExtra("lat", 0d));
                 System.out.println(intent.getDoubleExtra("lng", 0d));
             }

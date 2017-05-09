@@ -64,6 +64,8 @@ public class InOutBoardFragment extends ListFragment {
     private Handler handler = new Handler();
     private Runnable dataPullRunnable;
 
+
+    DeviceStatus.Status boardstatus = DeviceStatus.Status.OUT;
     // Default is in the center of OU44.
     private double localLat = 55.3674083780001;
     private double localLng = 10.4307825390001;
@@ -93,7 +95,15 @@ public class InOutBoardFragment extends ListFragment {
             public void onReceive(Context context, Intent intent) {
                 localLat = intent.getDoubleExtra("lat", 0d);
                 localLng = intent.getDoubleExtra("lng", 0d);
-
+                String location = intent.getStringExtra("location");
+                switch (location) {
+                    case "Outside OU44":
+                        boardstatus = DeviceStatus.Status.OUT;
+                        break;
+                    case "Inside OU44":
+                            boardstatus = DeviceStatus.Status.IN;
+                        break;
+                }
                 System.out.println(intent.getDoubleExtra("lat", 0d));
                 System.out.println(intent.getDoubleExtra("lng", 0d));
             }
@@ -137,8 +147,8 @@ public class InOutBoardFragment extends ListFragment {
                             localPhoneLocation = findLocation(deviceStatus);
                             deviceList.remove(deviceStatus);
 
-                            
-                            calculateDistance();
+                            if(boardstatus.equals(DeviceStatus.Status.IN))
+                                calculateDistance();
 
                             sortDeviceList();
 
@@ -231,7 +241,6 @@ public class InOutBoardFragment extends ListFragment {
                 }
             }
         }
-        sortDeviceList();
     }
 
     private void sortDeviceList() {

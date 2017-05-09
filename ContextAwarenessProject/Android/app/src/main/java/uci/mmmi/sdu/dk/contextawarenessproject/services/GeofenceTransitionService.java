@@ -1,5 +1,6 @@
 package uci.mmmi.sdu.dk.contextawarenessproject.services;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
@@ -60,6 +61,23 @@ public class GeofenceTransitionService extends IntentService {
 
         if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
             System.out.println("GEOFENCE DWELL");
+            locationIntent.putExtra("lat", geofencingEvent.getTriggeringLocation().getLatitude());
+            locationIntent.putExtra("lng", geofencingEvent.getTriggeringLocation().getLongitude());
+            if(isMyServiceRunning(KontaktBLEService.class))
+                locationIntent.putExtra("location", "Inside OU44");
+            else
+                locationIntent.putExtra("location", "Outside OU44");
+            getApplicationContext().sendBroadcast(locationIntent);
         }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(getApplicationContext().ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
